@@ -1,0 +1,131 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 210 50% 98%;
+    --foreground: 215 25% 20%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 215 25% 20%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 25% 20%;
+
+    --primary: 195 100% 33%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 195 70% 96%;
+    --secondary-foreground: 195 100% 25%;
+
+    --muted: 215 16% 92%;
+    --muted-foreground: 215 16% 46.9%;
+
+    --accent: 35 100% 56%;
+    --accent-foreground: 215 25% 20%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 215 16% 90%;
+    --input: 215 16% 90%;
+    --ring: 195 100% 33%;
+
+    --radius: 0.5rem;
+
+    --sidebar-background: 210 30% 15%;
+    --sidebar-foreground: 0 0% 95%;
+    --sidebar-primary: 195 100% 45%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 210 25% 20%;
+    --sidebar-accent-foreground: 0 0% 95%;
+    --sidebar-border: 210 25% 25%;
+    --sidebar-ring: 195 100% 50%;
+  }
+
+  .dark {
+    --background: 215 30% 12%;
+    --foreground: 210 40% 98%;
+
+    --card: 215 35% 15%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 215 35% 15%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 195 100% 45%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 215 25% 25%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 215 25% 20%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent: 35 100% 56%;
+    --accent-foreground: 215 25% 15%;
+
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 215 25% 25%;
+    --input: 215 25% 25%;
+    --ring: 195 100% 50%;
+    
+    --sidebar-background: 210 35% 10%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 195 100% 45%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 215 20% 20%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 215 20% 25%;
+    --sidebar-ring: 195 100% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+.finance-gradient {
+  background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(200, 100%, 35%) 100%);
+}
+
+.chart-container {
+  width: 100%;
+  height: 100%;
+  min-height: 250px;
+}
+
+/* Soft background colors for bonus cards */
+.bg-soft-yellow {
+  background-color: #FEF7CD;
+}
+
+.bg-soft-blue {
+  background-color: #D3E4FD;
+}
+
+.bg-soft-purple {
+  background-color: #E5DEFF;
+}
+
+.bg-soft-green {
+  background-color: #F2FCE2;
+}
+
+.bg-soft-pink {
+  background-color: #FFDEE2;
+}
+
+.bg-soft-peach {
+  background-color: #FDE1D3;
+}
