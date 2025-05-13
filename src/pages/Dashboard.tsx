@@ -81,14 +81,14 @@ export default function Dashboard() {
       <div className="space-y-8">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold">Welcome Back</h1>
-            <p className="text-muted-foreground">Discover new investment opportunities</p>
+            <h1 className="text-3xl font-bold">Let AI work for you!</h1>
+            <p className="text-muted-foreground">Discover new AI legitimate trading methods</p>
           </div>
           <Button 
             onClick={() => navigate('/packages')}
             className="bg-gradient-to-r from-finance-teal to-finance-blue hover:opacity-90"
           >
-            Invest Now
+            Start Now
           </Button>
         </div>
         
@@ -181,56 +181,6 @@ export default function Dashboard() {
               </Card>
             ))}
           </div>
-        </div>
-        
-        {/* Popular Investment Packages */}
-        <div className="space-y-4">
-          <h2 className="text-xl font-semibold">Popular Investment Packages</h2>
-          <Carousel className="w-full">
-            <CarouselContent>
-              {packages.map(pkg => (
-                <CarouselItem key={pkg.id} className="md:basis-1/2 lg:basis-1/3">
-                  <div className="p-1">
-                    <Card className="h-full">
-                      <CardHeader className="pb-2">
-                        <CardTitle>{pkg.name}</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="space-y-2">
-                          <div className="flex justify-between">
-                            <span className="text-sm">Daily Return:</span>
-                            <span className="font-medium text-finance-green">
-                              {pkg.dailyReturnRange.min}% - {pkg.dailyReturnRange.max}%
-                            </span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-sm">Min Investment:</span>
-                            <span className="font-medium">${pkg.minInvestment}</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-sm">Duration:</span>
-                            <span className="font-medium">{pkg.durationDays} days</span>
-                          </div>
-                          <Separator className="my-2" />
-                          <Button 
-                            variant="outline" 
-                            className="w-full mt-2"
-                            onClick={() => navigate('/packages')}
-                          >
-                            View Details
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <div className="hidden md:block">
-              <CarouselPrevious className="left-0" />
-              <CarouselNext className="right-0" />
-            </div>
-          </Carousel>
         </div>
       </div>
     </Layout>

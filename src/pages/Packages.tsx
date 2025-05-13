@@ -53,22 +53,10 @@ export default function Packages() {
     <Layout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold">Investment Packages</h1>
+          <h1 className="text-3xl font-bold">AI Traders Packages</h1>
           <p className="text-muted-foreground mt-2">
-            Choose from our range of forex investment packages to start earning daily returns.
+            Choose from our range of best AI traders start earning daily returns.
           </p>
-        </div>
-        
-        <div className="bg-secondary/30 rounded-lg p-4 flex flex-col md:flex-row justify-between items-center">
-          <div>
-            <h2 className="font-medium">Your Balance</h2>
-            <p className="text-2xl font-bold">${userBalance.toLocaleString()}</p>
-          </div>
-          <div className="mt-4 md:mt-0">
-            <p className="text-sm text-muted-foreground">
-              Invest now to start earning daily returns of 1-5%
-            </p>
-          </div>
         </div>
         
         <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4">

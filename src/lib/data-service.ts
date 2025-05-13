@@ -6,7 +6,7 @@ import { User, Package, Investment, DailyReturn, Stats } from '@/types';
 export const packages: Package[] = [
   {
     id: '1',
-    name: 'Forex Starter',
+    name: 'OpenAI Trader',
     tier: 'Starter',
     minInvestment: 100,
     maxInvestment: 1000,
@@ -20,7 +20,7 @@ export const packages: Package[] = [
   },
   {
     id: '2',
-    name: 'Growth Trader',
+    name: 'FinBERT AI Trader',
     tier: 'Growth',
     minInvestment: 1000,
     maxInvestment: 5000,
@@ -34,7 +34,7 @@ export const packages: Package[] = [
   },
   {
     id: '3',
-    name: 'Premium Forex',
+    name: ' XGBoost Premium Forex',
     tier: 'Premium',
     minInvestment: 5000,
     maxInvestment: 20000,
@@ -48,7 +48,7 @@ export const packages: Package[] = [
   },
   {
     id: '4',
-    name: 'Elite Trader',
+    name: 'Deep Q-Learning (DQN)',
     tier: 'Elite',
     minInvestment: 20000,
     maxInvestment: 100000,

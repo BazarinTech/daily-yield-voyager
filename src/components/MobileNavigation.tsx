@@ -14,7 +14,7 @@ export default function MobileNavigation() {
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 dark:bg-sidebar dark:border-sidebar-border md:hidden">
+    <div className="sticky bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 dark:bg-sidebar dark:border-sidebar-border md:hidden">
       <div className="flex justify-around">
         {navItems.map((item) => {
           const Icon = item.icon;
@@ -24,12 +24,12 @@ export default function MobileNavigation() {
               key={item.name}
               to={item.path}
               className={cn(
-                "flex flex-col items-center py-2 px-3",
+                "flex flex-col items-center py-4 px-3",
                 isActive ? "text-primary" : "text-gray-500 dark:text-sidebar-foreground/70"
               )}
             >
               <Icon size={20} />
-              <span className="text-xs mt-1">{item.name}</span>
+              <span className="text-sm mt-1">{item.name}</span>
             </Link>
           );
         })}

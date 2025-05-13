@@ -109,10 +109,10 @@ export default function History() {
                           {formatDate(investment.startDate)}
                         </TableCell>
                         <TableCell className="text-right">
-                          ${investment.amount.toLocaleString()}
+                          Kes{investment.amount.toLocaleString()}
                         </TableCell>
                         <TableCell className="text-right text-finance-green">
-                          +${investment.totalReturn.toLocaleString()}
+                          +Kes{investment.totalReturn.toLocaleString()}
                         </TableCell>
                         <TableCell>
                           <Badge 

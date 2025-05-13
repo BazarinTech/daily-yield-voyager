@@ -118,12 +118,12 @@ export default function InvestmentDetail() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-sm text-muted-foreground">Amount Invested</p>
-                  <p className="text-lg font-semibold">${investment.amount.toLocaleString()}</p>
+                  <p className="text-lg font-semibold">Kes{investment.amount.toLocaleString()}</p>
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Total Returns</p>
                   <p className="text-lg font-semibold text-finance-green">
-                    +${investment.totalReturn.toLocaleString()}
+                    +Kes{investment.totalReturn.toLocaleString()}
                   </p>
                 </div>
                 <div>

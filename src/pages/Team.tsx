@@ -65,7 +65,7 @@ export default function Team() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-finance-green">
-                ${referrals.reduce((sum, ref) => sum + ref.earnings, 0)}
+                Kes{referrals.reduce((sum, ref) => sum + ref.earnings, 0)}
               </div>
             </CardContent>
           </Card>
@@ -100,7 +100,7 @@ export default function Team() {
                       </div>
                     </div>
                     <div className="text-finance-green font-medium">
-                      ${referral.earnings}
+                      Kes{referral.earnings}
                     </div>
                   </div>
                 ))}

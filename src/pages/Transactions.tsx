@@ -90,7 +90,7 @@ export default function Transactions() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">${mockUser.balance.toLocaleString()}</div>
+              <div className="text-2xl font-bold">Kes{mockUser.balance.toLocaleString()}</div>
             </CardContent>
           </Card>
           
@@ -190,21 +190,21 @@ export default function Transactions() {
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">
-                Total Invested
+                Total Deposited
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">${mockUser.totalInvested.toLocaleString()}</div>
+              <div className="text-2xl font-bold">Kes{mockUser.totalInvested.toLocaleString()}</div>
             </CardContent>
           </Card>
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">
-                Total Returns
+                Total Withdrawn
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-finance-green">${mockUser.totalReturns.toLocaleString()}</div>
+              <div className="text-2xl font-bold text-finance-green">Kes{mockUser.totalReturns.toLocaleString()}</div>
             </CardContent>
           </Card>
         </div>

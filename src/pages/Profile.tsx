@@ -15,7 +15,6 @@ export default function Profile() {
   return (
     <Layout>
       <div className="space-y-6">
-        <h1 className="text-2xl font-bold">Profile</h1>
         
         <div className="flex justify-center">
           <div className="w-20 h-20 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-2xl font-semibold">
@@ -27,7 +26,7 @@ export default function Profile() {
         <div className="grid gap-4 grid-cols-2 md:grid-cols-4">
           <StatCard
             title="Total Invested"
-            value={`$${stats.totalInvested.toLocaleString()}`}
+            value={`Kes${stats.totalInvested.toLocaleString()}`}
             description="Across all packages"
             icon={<DollarSign className="h-4 w-4" />}
             trend={2.5}
@@ -41,7 +40,7 @@ export default function Profile() {
           />
           <StatCard
             title="Total Earned"
-            value={`$${stats.totalEarned.toLocaleString()}`}
+            value={`Kes${stats.totalEarned.toLocaleString()}`}
             description="From all investments"
             icon={<TrendingUp className="h-4 w-4" />}
             trend={3.2}
@@ -65,7 +64,7 @@ export default function Profile() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Available Balance</p>
-                <p className="text-3xl font-bold">${mockUser.balance.toLocaleString()}</p>
+                <p className="text-3xl font-bold">kes{mockUser.balance.toLocaleString()}</p>
               </div>
               <Button className="bg-gradient-to-r from-finance-teal to-finance-blue hover:opacity-90">
                 Deposit Funds

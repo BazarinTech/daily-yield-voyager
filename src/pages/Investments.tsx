@@ -22,19 +22,17 @@ export default function Investments() {
     <Layout>
       <div className="space-y-8">
         <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold">Your Investments</h1>
+          <h1 className="text-3xl font-bold">Your Ai Traders</h1>
           <Button 
             onClick={() => navigate('/packages')}
             className="bg-gradient-to-r from-finance-teal to-finance-blue hover:opacity-90"
           >
-            New Investment
+            Add Traders
           </Button>
         </div>
         
         {/* Active Investments */}
         <div className="space-y-4">
-          <h2 className="text-2xl font-semibold">Active Investments</h2>
-          
           {activeInvestments.length > 0 ? (
             <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
               {activeInvestments.map(investment => (
@@ -56,30 +54,6 @@ export default function Investments() {
           )}
         </div>
         
-        {/* Completed Investments */}
-        <div className="space-y-4">
-          <h2 className="text-2xl font-semibold">Completed Investments</h2>
-          
-          {completedInvestments.length > 0 ? (
-            <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-              {completedInvestments.map(investment => (
-                <InvestmentCard
-                  key={investment.id}
-                  investment={investment}
-                  onViewDetails={(id) => navigate(`/investments/${id}`)}
-                />
-              ))}
-            </div>
-          ) : (
-            <Card>
-              <CardContent className="py-6">
-                <p className="text-muted-foreground text-center">
-                  You don't have any completed investments yet.
-                </p>
-              </CardContent>
-            </Card>
-          )}
-        </div>
       </div>
     </Layout>
   );
