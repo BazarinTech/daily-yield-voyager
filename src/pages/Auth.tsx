@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "@/hooks/use-toast";
+import { login, register } from "@/lib/auth";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
@@ -41,6 +42,7 @@ export default function Auth() {
   const [activeTab, setActiveTab] = useState<string>("login");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false)
 
   const loginForm = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -60,24 +62,54 @@ export default function Auth() {
     },
   });
 
-  const onLoginSubmit = (values: LoginFormValues) => {
-    console.log("Login values:", values);
-    // Simulate login success
-    toast({
-      title: "Login successful!",
-      description: "Redirecting to dashboard...",
-    });
-    navigate("/");
+  const onLoginSubmit = async(values: LoginFormValues) => {
+    setIsLoading(true)
+    try {
+      const results = await login({email: values.email, password: values.password, type: 'login'});
+      setIsLoading(false)
+      if (results.status == 'Success') {
+          // Simulate register success
+          toast({
+            title: "Login successful!",
+            description: "Redirecting to dashboard.",
+          });
+          navigate('/');
+      }else{
+        toast({
+          title: "Login failed!",
+          description: results.message,
+        })
+      }
+    } catch (error) {
+      console.error('Login error:', error)
+      setIsLoading(false)
+    }
+  
   };
 
-  const onRegisterSubmit = (values: RegisterFormValues) => {
-    console.log("Register values:", values);
-    // Simulate register success
-    toast({
-      title: "Registration successful!",
-      description: "Please login with your new account.",
-    });
-    setActiveTab("login");
+  const onRegisterSubmit = async(values: RegisterFormValues) => {
+    setIsLoading(true)
+    try {
+      const results = await register({email: values.email, password: values.password, confirmPassword: values.confirmPassword, phone: values.phone, upline: '0', type: 'register'});
+      setIsLoading(false)
+      if (results.status == 'Success') {
+          // Simulate register success
+          toast({
+            title: "Registration successful!",
+            description: "Please login with your new account.",
+          });
+          setActiveTab("login");
+      }else{
+        toast({
+          title: "Registration failed!",
+          description: results.message,
+        })
+      }
+    } catch (error) {
+      console.error('Register error:', error)
+      setIsLoading(false)
+    }
+
   };
 
   return (
@@ -151,8 +183,8 @@ export default function Auth() {
                     )}
                   />
                   
-                  <Button type="submit" className="w-full mt-6 bg-gradient-to-r from-finance-teal to-finance-blue hover:opacity-90">
-                    Sign In
+                  <Button type="submit" disabled={isLoading}  className="w-full mt-6 bg-gradient-to-r from-finance-teal to-finance-blue hover:opacity-90">
+                    {isLoading ? 'Please wait...' : 'Sign In'}
                   </Button>
                 </form>
               </Form>
@@ -182,7 +214,7 @@ export default function Auth() {
                       <FormItem>
                         <FormLabel>Phone</FormLabel>
                         <FormControl>
-                          <Input placeholder="+1234567890" {...field} />
+                          <Input placeholder="0712345678" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -255,8 +287,8 @@ export default function Auth() {
                     )}
                   />
                   
-                  <Button type="submit" className="w-full mt-6 bg-gradient-to-r from-finance-teal to-finance-blue hover:opacity-90">
-                    Register
+                  <Button type="submit" disabled={isLoading} className="w-full mt-6 bg-gradient-to-r from-finance-teal to-finance-blue hover:opacity-90">
+                    {isLoading ? 'Please wait...' : 'Register'}
                   </Button>
                 </form>
               </Form>
