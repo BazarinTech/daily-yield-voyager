@@ -18,6 +18,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "@/hooks/use-toast";
 import { login, register } from "@/lib/auth";
+import { useAuth } from "@/contexts/AuthContext";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
@@ -43,6 +44,7 @@ export default function Auth() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false)
+  const { loginA } = useAuth()
 
   const loginForm = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -69,6 +71,8 @@ export default function Auth() {
       setIsLoading(false)
       if (results.status == 'Success') {
           // Simulate register success
+          localStorage.setItem('xghduuyjuyafv', JSON.stringify(results.userID))
+          loginA(results.userID)
           toast({
             title: "Login successful!",
             description: "Redirecting to dashboard.",

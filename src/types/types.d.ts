@@ -24,3 +24,71 @@ type Login = {
     password: string
     type: string
 }
+
+type User = {
+    email: string,
+    phone: string,
+    date_joined: string
+    status: string,
+    upline: string
+}
+
+type Wallet = {
+    balance: number,
+    total_deposits: number,
+    total_withdrawals: number,
+    income: number,
+    invite_income: number,
+    status: string
+}
+type InvestmentOrder = {
+    ID: number,
+    product_name: string,
+    product_price: number,
+    duration: string,
+    status: string,
+    amount: number,
+    investment_date: string,
+    total_returns: number,
+    return_rate: number,
+}
+
+type Bonus = {
+    ID: number,
+    name: string,
+    type: string,
+    reward: string,
+    is_claimed: boolean,
+    target: number
+    status: string,
+    time: string,
+    reward_type: string
+}
+
+type Product = {
+    ID: number,
+    name: string,
+    return: number,
+    min: number,
+    max: number,
+    status: string,
+    duration: number,
+    description: string,
+}
+
+type Mains = {
+    user: User,
+    wallet: Wallet,
+    referral: {
+        downlines: User[],
+        total_downlines: number,
+        active_downlines: number,
+    }
+    products: Product[],
+    user_investments: InvestmentOrder[],
+    bonuses: Bonus[]
+}
+
+type CommonFetch = {
+    userID: number
+}
