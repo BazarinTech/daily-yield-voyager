@@ -7,10 +7,13 @@ import { Input } from "@/components/ui/input";
 import { mockUser, getInvestmentStats } from "@/lib/data-service";
 import { User, Mail, Phone, Shield, LogOut, DollarSign, LineChart, TrendingUp, ArrowUp } from "lucide-react";
 import StatCard from "@/components/StatCard";
+import { useAuth } from "@/contexts/AuthContext";
+import useFormat from "@/hooks/useFormat";
 
 export default function Profile() {
   const [editing, setEditing] = useState(false);
   const stats = getInvestmentStats();
+  const { mains, logout } = useAuth()
   
   return (
     <Layout>
@@ -25,8 +28,8 @@ export default function Profile() {
         {/* Stats Cards - Moved from Dashboard */}
         <div className="grid gap-4 grid-cols-2 md:grid-cols-4">
           <StatCard
-            title="Total Invested"
-            value={`Kes${stats.totalInvested.toLocaleString()}`}
+            title="Investments Income"
+            value={`Kes ${useFormat(mains ? mains.wallet.income : 0)}`}
             description="Across all packages"
             icon={<DollarSign className="h-4 w-4" />}
             trend={2.5}
@@ -39,8 +42,8 @@ export default function Profile() {
             trend={0}
           />
           <StatCard
-            title="Total Earned"
-            value={`Kes${stats.totalEarned.toLocaleString()}`}
+            title="Invite Income"
+            value={`Kes ${useFormat(mains ? mains.wallet.invite_income : 0)}`}
             description="From all investments"
             icon={<TrendingUp className="h-4 w-4" />}
             trend={3.2}
@@ -64,7 +67,7 @@ export default function Profile() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Available Balance</p>
-                <p className="text-3xl font-bold">kes{mockUser.balance.toLocaleString()}</p>
+                <p className="text-3xl font-bold">kes {useFormat(mains ? mains.wallet.balance : 0)}</p>
               </div>
               <Button className="bg-gradient-to-r from-finance-teal to-finance-blue hover:opacity-90">
                 Deposit Funds
@@ -79,26 +82,14 @@ export default function Profile() {
             <CardDescription>Manage your personal details</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm font-medium block mb-1">Full Name</label>
-                <div className="relative">
-                  <User className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
-                  <Input
-                    value={mockUser.name}
-                    readOnly={!editing}
-                    className="pl-10"
-                  />
-                </div>
-              </div>
-              
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">     
               <div>
                 <label className="text-sm font-medium block mb-1">Email</label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
                   <Input
-                    value={mockUser.email}
-                    readOnly={!editing}
+                    value={mains ? mains.user.email : ''}
+                    readOnly
                     className="pl-10"
                   />
                 </div>
@@ -109,7 +100,7 @@ export default function Profile() {
                 <div className="relative">
                   <Phone className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
                   <Input
-                    value="+1 (123) 456-7890"
+                    value={mains ? mains.user.phone : ''}
                     readOnly={!editing}
                     className="pl-10"
                   />
@@ -153,7 +144,7 @@ export default function Profile() {
             <CardTitle className="text-destructive">Danger Zone</CardTitle>
           </CardHeader>
           <CardContent>
-            <Button variant="destructive" className="w-full justify-start">
+            <Button variant="destructive" onClick={logout} className="w-full justify-start">
               <LogOut className="mr-2 h-4 w-4" />
               Sign Out
             </Button>

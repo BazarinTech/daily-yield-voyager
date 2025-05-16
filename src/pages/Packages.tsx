@@ -4,24 +4,26 @@ import Layout from "@/components/Layout";
 import PackageCard from "@/components/PackageCard";
 import InvestForm from "@/components/InvestForm";
 import { packages, createInvestment, mockUser } from "@/lib/data-service";
-import { Package } from "@/types";
+
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Packages() {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [selectedPackage, setSelectedPackage] = useState<Package | undefined>();
+  const { mains } = useAuth()
+  const [selectedPackage, setSelectedPackage] = useState<Product | undefined>();
   const [isInvestFormOpen, setIsInvestFormOpen] = useState(false);
   const [userBalance, setUserBalance] = useState(mockUser.balance);
   
   const handleInvest = (packageId: string) => {
-    const pkg = packages.find(p => p.id === packageId);
+    const pkg = mains.products.find(p => p.ID === packageId);
     if (pkg) {
-      if (userBalance < pkg.minInvestment) {
+      if (userBalance < pkg.min) {
         toast({
           title: "Insufficient balance",
-          description: `You need at least $${pkg.minInvestment.toLocaleString()} to invest in this package.`,
+          description: `You need at least $${pkg.min.toLocaleString()} to invest in this package.`,
           variant: "destructive",
         });
         return;
@@ -34,7 +36,7 @@ export default function Packages() {
   const handleInvestSubmit = (packageId: string, amount: number) => {
     try {
       const investment = createInvestment(packageId, amount);
-      setUserBalance(mockUser.balance);
+      setUserBalance(mains?.wallet.balance);
       toast({
         title: "Investment successful",
         description: `Your investment of $${amount.toLocaleString()} has been processed.`,
@@ -60,9 +62,9 @@ export default function Packages() {
         </div>
         
         <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4">
-          {packages.map(pkg => (
+          {mains?.products.map(pkg => (
             <PackageCard
-              key={pkg.id}
+              key={pkg.ID}
               pkg={pkg}
               onInvest={handleInvest}
             />

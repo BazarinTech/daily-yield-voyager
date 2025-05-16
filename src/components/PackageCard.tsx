@@ -11,9 +11,10 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Package } from "@/types";
 import { cn } from "@/lib/utils";
+import useFormat from "@/hooks/useFormat";
 
 interface PackageCardProps {
-  pkg: Package;
+  pkg: Product;
   onInvest: (packageId: string) => void;
   className?: string;
 }
@@ -50,28 +51,28 @@ export default function PackageCard({ pkg, onInvest, className }: PackageCardPro
         <div className="grid grid-cols-2 gap-4">
           <div>
             <p className="text-sm text-muted-foreground">Min Investment</p>
-            <p className="text-lg font-semibold">${pkg.minInvestment.toLocaleString()}</p>
+            <p className="text-lg font-semibold">Kes {useFormat(pkg.min)}</p>
           </div>
           <div>
             <p className="text-sm text-muted-foreground">Max Investment</p>
-            <p className="text-lg font-semibold">${pkg.maxInvestment.toLocaleString()}</p>
+            <p className="text-lg font-semibold">Kes {useFormat(pkg.max)}</p>
           </div>
           <div>
             <p className="text-sm text-muted-foreground">Daily Return</p>
             <p className="text-lg font-semibold">
-              {pkg.dailyReturnRange.min}% - {pkg.dailyReturnRange.max}%
+              {pkg.return}% 
             </p>
           </div>
           <div>
             <p className="text-sm text-muted-foreground">Duration</p>
-            <p className="text-lg font-semibold">{pkg.durationDays} days</p>
+            <p className="text-lg font-semibold">{pkg.duration} days</p>
           </div>
         </div>
         <p className="text-sm text-muted-foreground">{pkg.description}</p>
       </CardContent>
       <CardFooter>
         <Button 
-          onClick={() => onInvest(pkg.id)}
+          onClick={() => onInvest(pkg.ID)}
           className="w-full bg-gradient-to-r from-finance-teal to-finance-blue hover:opacity-90"
         >
           Invest Now

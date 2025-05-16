@@ -17,21 +17,15 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Wallet, Plus, ArrowDown, ArrowUp } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import useFormat from "@/hooks/useFormat";
 
 export default function Transactions() {
+  const { mains } = useAuth()
   const [depositAmount, setDepositAmount] = useState<string>("");
   const [withdrawAmount, setWithdrawAmount] = useState<string>("");
   const { toast } = useToast();
   
-  // Mock transactions data
-  const transactions = [
-    { id: 1, type: "investment", amount: 500, date: "2023-05-01", description: "Invested in Forex Starter" },
-    { id: 2, type: "return", amount: 15, date: "2023-05-02", description: "Daily return from Forex Starter" },
-    { id: 3, type: "return", amount: 16.25, date: "2023-05-03", description: "Daily return from Forex Starter" },
-    { id: 4, type: "investment", amount: 2500, date: "2023-05-10", description: "Invested in Growth Trader" },
-    { id: 5, type: "return", amount: 62.5, date: "2023-05-11", description: "Daily return from Growth Trader" },
-  ];
-
   const handleDeposit = () => {
     if (!depositAmount || isNaN(Number(depositAmount)) || Number(depositAmount) <= 0) {
       toast({
@@ -90,7 +84,7 @@ export default function Transactions() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">Kes{mockUser.balance.toLocaleString()}</div>
+              <div className="text-2xl font-bold">Kes {useFormat(mains ? mains.wallet.balance : 0)}</div>
             </CardContent>
           </Card>
           
@@ -112,7 +106,7 @@ export default function Transactions() {
                   <div className="grid gap-2">
                     <Label htmlFor="deposit-amount">Amount</Label>
                     <div className="relative">
-                      <span className="absolute left-3 top-2.5 text-muted-foreground">$</span>
+                      <span className="absolute left-3 top-2.5 text-muted-foreground">Kes </span>
                       <Input
                         id="deposit-amount"
                         placeholder="Enter amount"
@@ -156,7 +150,7 @@ export default function Transactions() {
                   <div className="grid gap-2">
                     <Label htmlFor="withdraw-amount">Amount</Label>
                     <div className="relative">
-                      <span className="absolute left-3 top-2.5 text-muted-foreground">$</span>
+                      <span className="absolute left-3 top-2.5 text-muted-foreground">Kes</span>
                       <Input
                         id="withdraw-amount"
                         placeholder="Enter amount"
@@ -166,7 +160,7 @@ export default function Transactions() {
                         onChange={(e) => setWithdrawAmount(e.target.value)}
                       />
                     </div>
-                    <p className="text-sm text-muted-foreground">Available: ${mockUser.balance.toLocaleString()}</p>
+                    <p className="text-sm text-muted-foreground">Available: Kes {useFormat(mains ? mains.wallet.balance : 0)}</p>
                   </div>
                   <div className="grid gap-2">
                     <Label htmlFor="bank-account">Bank Account</Label>
@@ -194,7 +188,7 @@ export default function Transactions() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">Kes{mockUser.totalInvested.toLocaleString()}</div>
+              <div className="text-2xl font-bold">Kes {useFormat(mains ? mains.wallet.total_deposits : 0)}</div>
             </CardContent>
           </Card>
           <Card>
@@ -204,7 +198,7 @@ export default function Transactions() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-finance-green">Kes{mockUser.totalReturns.toLocaleString()}</div>
+              <div className="text-2xl font-bold text-finance-green">Kes {useFormat(mains ? mains.wallet.total_withdrawals : 0)}</div>
             </CardContent>
           </Card>
         </div>
@@ -215,19 +209,20 @@ export default function Transactions() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {transactions.map((tx) => (
-                <div key={tx.id} className="flex items-center justify-between border-b border-border pb-4 last:border-0 last:pb-0">
+              {mains?.transactions.map((tx) => (
+                <div key={tx.ID} className="flex items-center justify-between border-b border-border pb-4 last:border-0 last:pb-0">
                   <div>
-                    <div className="font-medium">{tx.description}</div>
+                    <div className="font-medium">{tx.type}</div>
                     <div className="text-sm text-muted-foreground">
-                      {new Date(tx.date).toLocaleDateString()}
+                      {new Date(tx.time).toLocaleDateString()}
                     </div>
                   </div>
-                  <div className={`font-medium ${tx.type === 'return' ? 'text-finance-green' : ''}`}>
-                    {tx.type === 'investment' ? '-' : '+'} ${tx.amount}
+                  <div className={`font-medium ${tx.type === 'Deposit' ? 'text-finance-green' : ''}`}>
+                    {tx.type === 'Deposit' ? '+' : '-'} kes { useFormat(tx.amount)}
                   </div>
                 </div>
               ))}
+              {mains?.transactions.length < 1 && 'No transaction records found'}
             </div>
           </CardContent>
         </Card>

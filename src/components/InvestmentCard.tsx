@@ -6,14 +6,14 @@ import { getPackageById } from "@/lib/data-service";
 import { Badge } from "@/components/ui/badge";
 
 interface InvestmentCardProps {
-  investment: Investment;
+  investment: InvestmentOrder;
   onViewDetails: (investmentId: string) => void;
 }
 
 export default function InvestmentCard({ investment, onViewDetails }: InvestmentCardProps) {
-  const pkg = getPackageById(investment.packageId);
-  const startDate = new Date(investment.startDate);
-  const endDate = new Date(investment.endDate);
+  const pkg = getPackageById(investment.ID);
+  const startDate = new Date(investment.time);
+  const endDate = new Date(investment.time);
   const today = new Date();
   
   // Calculate days elapsed and total days
@@ -23,7 +23,7 @@ export default function InvestmentCard({ investment, onViewDetails }: Investment
   
   // Calculate return rate
   const returnRate = investment.amount > 0 
-    ? ((investment.totalReturn / investment.amount) * 100).toFixed(2) 
+    ? ((investment.total_returns / investment.amount) * 100).toFixed(2) 
     : "0.00";
 
   // Format dates
@@ -64,7 +64,7 @@ export default function InvestmentCard({ investment, onViewDetails }: Investment
           <div>
             <p className="text-sm text-muted-foreground">Total Returns</p>
             <p className="text-lg font-semibold text-finance-green">
-              +Kes{investment.totalReturn.toLocaleString()}
+              +Kes{investment.total_returns.toLocaleString()}
             </p>
           </div>
         </div>
@@ -88,7 +88,7 @@ export default function InvestmentCard({ investment, onViewDetails }: Investment
       </CardContent>
       <CardFooter>
         <button 
-          onClick={() => onViewDetails(investment.id)}
+          onClick={() => onViewDetails(investment.ID)}
           className="text-sm text-primary font-medium hover:underline w-full text-center"
         >
           View Details

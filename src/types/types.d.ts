@@ -42,7 +42,7 @@ type Wallet = {
     status: string
 }
 type InvestmentOrder = {
-    ID: number,
+    ID: string,
     product_name: string,
     product_price: number,
     duration: string,
@@ -51,6 +51,7 @@ type InvestmentOrder = {
     investment_date: string,
     total_returns: number,
     return_rate: number,
+    time: string
 }
 
 type Bonus = {
@@ -62,11 +63,12 @@ type Bonus = {
     target: number
     status: string,
     time: string,
-    reward_type: string
+    reward_type: string,
+    progress: number
 }
 
 type Product = {
-    ID: number,
+    ID: string,
     name: string,
     return: number,
     min: number,
@@ -74,6 +76,18 @@ type Product = {
     status: string,
     duration: number,
     description: string,
+    tier: string
+    riskLevel: number
+}
+
+type Transactions = {
+    ID: string,
+    type: string,
+    amount: number,
+    time: string,
+    status: string
+    description: string
+    fees: number
 }
 
 type Mains = {
@@ -86,7 +100,8 @@ type Mains = {
     }
     products: Product[],
     user_investments: InvestmentOrder[],
-    bonuses: Bonus[]
+    bonuses: Bonus[],
+    transactions: Transactions[]
 }
 
 type CommonFetch = {

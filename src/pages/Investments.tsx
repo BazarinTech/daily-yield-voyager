@@ -7,16 +7,21 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { investments } from "@/lib/data-service";
 import { Investment } from "@/types";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Investments() {
   const navigate = useNavigate();
-  const [activeInvestments, setActiveInvestments] = useState<Investment[]>([]);
-  const [completedInvestments, setCompletedInvestments] = useState<Investment[]>([]);
+  const { mains } = useAuth()
+  const [activeInvestments, setActiveInvestments] = useState<InvestmentOrder[]>([]);
+  const [completedInvestments, setCompletedInvestments] = useState<InvestmentOrder[]>([]);
   
   useEffect(() => {
-    setActiveInvestments(investments.filter(inv => inv.status === 'active'));
-    setCompletedInvestments(investments.filter(inv => inv.status === 'completed'));
-  }, []);
+    if (mains) {
+      setActiveInvestments(mains.user_investments.filter(inv => inv.status === 'Active'));
+      setCompletedInvestments(mains.user_investments.filter(inv => inv.status === 'Completed'));
+    }
+
+  }, [mains]);
   
   return (
     <Layout>
@@ -37,7 +42,7 @@ export default function Investments() {
             <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
               {activeInvestments.map(investment => (
                 <InvestmentCard
-                  key={investment.id}
+                  key={investment.ID}
                   investment={investment}
                   onViewDetails={(id) => navigate(`/investments/${id}`)}
                 />

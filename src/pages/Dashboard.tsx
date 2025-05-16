@@ -20,23 +20,22 @@ import {
 import { Investment } from "@/types";
 import {
   ArrowRight,
-  CircleUserRound,
   Users,
   BarChart3,
   HelpCircle,
   Calendar,
-  ArrowUp,
   TrendingUp,
-  LineChart,
   Star
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Dashboard() {
   const navigate = useNavigate();
   const [stats, setStats] = useState(() => getInvestmentStats());
-  const [activeInvestments, setActiveInvestments] = useState<Investment[]>([]);
+  const [activeInvestments, setActiveInvestments] = useState<Product[]>([]);
+  const { mains } = useAuth()
   
   // Featured investment packages
   const featuredPackages = packages.slice(0, 3);
@@ -72,9 +71,12 @@ export default function Dashboard() {
   ];
   
   useEffect(() => {
-    setStats(getInvestmentStats());
-    setActiveInvestments(investments.filter(inv => inv.status === 'active').slice(0, 3));
-  }, []);
+    if (mains) {
+      setStats(getInvestmentStats());
+      setActiveInvestments(mains.products.filter(inv => inv.status === 'active').slice(0, 3));
+    }
+
+  }, [mains]);
   
   return (
     <Layout>
@@ -96,8 +98,8 @@ export default function Dashboard() {
         <Card className="overflow-hidden border-none shadow-lg">
           <Carousel className="w-full">
             <CarouselContent>
-              {featuredPackages.map((pkg) => (
-                <CarouselItem key={pkg.id}>
+              {mains?.products.map((pkg) => (
+                <CarouselItem key={pkg.ID}>
                   <div className="relative h-64 md:h-80 p-6 flex flex-col justify-between bg-gradient-to-r from-finance-blue to-finance-teal text-white">
                     <div className="absolute top-0 left-0 w-full h-full opacity-10">
                       <div className="absolute top-0 right-0 w-48 h-48 rounded-full bg-white/10"></div>
@@ -113,11 +115,11 @@ export default function Dashboard() {
                       <div className="space-y-2 md:space-y-1">
                         <div className="flex items-center">
                           <Star className="h-4 w-4 text-finance-accent mr-2" />
-                          <span className="text-sm">{pkg.dailyReturnRange.min}% - {pkg.dailyReturnRange.max}% Daily Return</span>
+                          <span className="text-sm">{pkg.return}% Daily Return</span>
                         </div>
                         <div className="flex items-center">
                           <Calendar className="h-4 w-4 text-finance-accent mr-2" />
-                          <span className="text-sm">{pkg.durationDays} Days Duration</span>
+                          <span className="text-sm">{pkg.duration} Days Duration</span>
                         </div>
                       </div>
                       

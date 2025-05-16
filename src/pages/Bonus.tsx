@@ -6,9 +6,11 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Trophy, Gift, PartyPopper } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Bonus() {
   const { toast } = useToast();
+  const { mains } = useAuth()
   const [claimedBonuses, setClaimedBonuses] = useState<number[]>([]);
 
   const bonusOffers = [
@@ -85,17 +87,12 @@ export default function Bonus() {
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-bold">Bonuses & Rewards</h1>
         </div>
-
-  
-
         <section>
-          <h2 className="text-xl font-semibold mb-4">Achievements</h2>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {achievements.map((achievement) => (
-              <Card key={achievement.id} className="overflow-hidden">
+            {mains?.bonuses.map((achievement) => (
+              <Card key={achievement.ID} className="overflow-hidden">
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-lg">{achievement.title}</CardTitle>
-                  <CardDescription>{achievement.description}</CardDescription>
+                  <CardTitle className="text-lg">{achievement.name}</CardTitle>
                 </CardHeader>
                 <CardContent className="pb-2">
                   <div className="w-full bg-muted rounded-full h-2.5">
@@ -120,6 +117,7 @@ export default function Bonus() {
                 </CardFooter>
               </Card>
             ))}
+            {mains?.bonuses.length < 1 && 'No Active bonus found'}
           </div>
         </section>
       </div>

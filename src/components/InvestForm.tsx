@@ -22,11 +22,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Package } from "@/types";
 import { useToast } from "@/hooks/use-toast";
+import useFormat from "@/hooks/useFormat";
 
 interface InvestFormProps {
-  packageData?: Package;
+  packageData?: Product;
   isOpen: boolean;
   onClose: () => void;
   onInvest: (packageId: string, amount: number) => void;
@@ -52,7 +52,7 @@ export default function InvestForm({
   const form = useForm<z.infer<typeof investmentSchema>>({
     resolver: zodResolver(investmentSchema),
     defaultValues: {
-      amount: packageData?.minInvestment || 100,
+      amount: packageData?.min || 100,
     },
   });
 
@@ -60,19 +60,19 @@ export default function InvestForm({
     if (!packageData) return;
     
     // Validate amount against package constraints
-    if (values.amount < packageData.minInvestment) {
+    if (values.amount < packageData.min) {
       toast({
         title: "Investment too small",
-        description: `Minimum investment for this package is $${packageData.minInvestment}`,
+        description: `Minimum investment for this package is Kes ${ useFormat(packageData.min)}`,
         variant: "destructive",
       });
       return;
     }
 
-    if (values.amount > packageData.maxInvestment) {
+    if (values.amount > packageData.max) {
       toast({
         title: "Investment too large",
-        description: `Maximum investment for this package is $${packageData.maxInvestment}`,
+        description: `Maximum investment for this package is Kes ${useFormat(packageData.max)}`,
         variant: "destructive",
       });
       return;
@@ -82,7 +82,7 @@ export default function InvestForm({
     if (values.amount > userBalance) {
       toast({
         title: "Insufficient balance",
-        description: `Your balance is $${userBalance.toLocaleString()}`,
+        description: `Your balance is Kes ${ useFormat(userBalance)}`,
         variant: "destructive",
       });
       return;
@@ -90,10 +90,10 @@ export default function InvestForm({
 
     setLoading(true);
     try {
-      onInvest(packageData.id, values.amount);
+      onInvest(packageData.ID, values.amount);
       toast({
         title: "Investment successful",
-        description: `You've successfully invested $${values.amount.toLocaleString()} in ${packageData.name}`,
+        description: `You've successfully invested Kes ${useFormat(values.amount)} in ${packageData.name}`,
       });
       onClose();
     } catch (error) {
@@ -112,8 +112,8 @@ export default function InvestForm({
   // Calculate estimated returns
   const calculateEstimatedReturns = () => {
     const amount = form.getValues("amount") || 0;
-    const min = (amount * packageData.dailyReturnRange.min * packageData.durationDays) / 100;
-    const max = (amount * packageData.dailyReturnRange.max * packageData.durationDays) / 100;
+    const min = (amount * packageData.return * packageData.duration) / 100;
+    const max = (amount * packageData.return * packageData.duration) / 100;
     return { min: min.toFixed(2), max: max.toFixed(2) };
   };
   
@@ -137,21 +137,21 @@ export default function InvestForm({
                 <div className="grid grid-cols-2 gap-2 text-sm">
                   <div className="bg-secondary/50 p-2 rounded-md">
                     <p className="text-muted-foreground">Min Investment</p>
-                    <p className="font-medium">${packageData.minInvestment.toLocaleString()}</p>
+                    <p className="font-medium">Kes {useFormat(packageData.min)}</p>
                   </div>
                   <div className="bg-secondary/50 p-2 rounded-md">
                     <p className="text-muted-foreground">Max Investment</p>
-                    <p className="font-medium">${packageData.maxInvestment.toLocaleString()}</p>
+                    <p className="font-medium">Kes {useFormat(packageData.max)}</p>
                   </div>
                   <div className="bg-secondary/50 p-2 rounded-md">
                     <p className="text-muted-foreground">Daily Return</p>
                     <p className="font-medium">
-                      {packageData.dailyReturnRange.min}% - {packageData.dailyReturnRange.max}%
+                      {packageData.return}
                     </p>
                   </div>
                   <div className="bg-secondary/50 p-2 rounded-md">
                     <p className="text-muted-foreground">Duration</p>
-                    <p className="font-medium">{packageData.durationDays} days</p>
+                    <p className="font-medium">{packageData.duration} days</p>
                   </div>
                 </div>
               </div>
@@ -165,7 +165,7 @@ export default function InvestForm({
                     <FormControl>
                       <div className="relative">
                         <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
-                          $
+                          Kes
                         </span>
                         <Input 
                           type="number" 
@@ -179,11 +179,11 @@ export default function InvestForm({
                       </div>
                     </FormControl>
                     <FormDescription className="flex justify-between">
-                      <span>Available Balance: ${userBalance.toLocaleString()}</span>
+                      <span>Available Balance: Kes { useFormat(userBalance)}</span>
                       <button 
                         type="button" 
                         className="text-primary text-xs"
-                        onClick={() => form.setValue("amount", Math.min(userBalance, packageData.maxInvestment))}
+                        onClick={() => form.setValue("amount", Math.min(userBalance, packageData.max))}
                       >
                         Max
                       </button>
@@ -196,8 +196,7 @@ export default function InvestForm({
               <div className="bg-secondary/30 p-3 rounded-md space-y-1">
                 <p className="text-sm font-medium">Estimated returns:</p>
                 <p className="text-sm">
-                  Between <span className="text-finance-green font-medium">${min}</span> and{" "}
-                  <span className="text-finance-green font-medium">${max}</span> over {packageData.durationDays} days
+                  <span className="text-finance-green font-medium">Kes { useFormat(min)}</span> over {packageData.duration} days
                 </p>
               </div>
             </div>
