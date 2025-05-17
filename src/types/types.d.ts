@@ -42,16 +42,16 @@ type Wallet = {
     status: string
 }
 type InvestmentOrder = {
-    ID: string,
+    ID: number,
     product_name: string,
     product_price: number,
-    duration: string,
+    duration: number,
     status: string,
     amount: number,
     investment_date: string,
     total_returns: number,
     return_rate: number,
-    time: string
+    remaining: number
 }
 
 type Bonus = {
@@ -106,4 +106,9 @@ type Mains = {
 
 type CommonFetch = {
     userID: number
+}
+
+type Invest = CommonFetch & {
+    prodID: string
+    amount: number
 }

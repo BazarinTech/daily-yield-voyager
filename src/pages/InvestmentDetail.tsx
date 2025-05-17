@@ -14,24 +14,36 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import ReturnsChart from "@/components/ReturnsChart";
-import { getInvestmentById, getPackageById } from "@/lib/data-service";
-import { Investment } from "@/types";
+import { getPackageById } from "@/lib/data-service";
+import { useAuth } from "@/contexts/AuthContext";
+import useFormat from "@/hooks/useFormat";
 
 export default function InvestmentDetail() {
   const { id } = useParams<{ id: string }>();
+  const { mains } = useAuth()
   const navigate = useNavigate();
-  const [investment, setInvestment] = useState<Investment | null>(null);
+  const [investment, setInvestment] = useState<InvestmentOrder | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const getInvestmentById = (id: string) => {
+  const selectedPackage = mains.user_investments.find(pkg => pkg.ID === Number(id));
+  return selectedPackage;
+};
+
   
   useEffect(() => {
-    if (id) {
-      const inv = getInvestmentById(id);
-      if (inv) {
-        setInvestment(inv);
+    if(mains){
+      if (id) {
+        const inv = getInvestmentById(id);
+        console.log('Investment:', inv)
+        if (inv) {
+          setInvestment(inv);
+        }
+        setLoading(false);
       }
-      setLoading(false);
     }
-  }, [id]);
+    
+  }, [id, mains]);
   
   if (loading) {
     return (
@@ -57,28 +69,11 @@ export default function InvestmentDetail() {
     );
   }
   
-  const pkg = getPackageById(investment.packageId);
-  const startDate = new Date(investment.startDate);
-  const endDate = new Date(investment.endDate);
+  const startDate = investment.investment_date;
   const today = new Date();
   
   // Calculate days elapsed and total days
-  const totalDays = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24));
-  const daysElapsed = Math.min(
-    totalDays,
-    Math.max(0, Math.ceil((today.getTime() - startDate.getTime()) / (1000 * 3600 * 24)))
-  );
-  const daysRemaining = Math.max(0, totalDays - daysElapsed);
-  const progress = (daysElapsed / totalDays) * 100;
-  
-  // Format dates
-  const formatDate = (date: Date) => {
-    return date.toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'short', 
-      day: 'numeric' 
-    });
-  };
+  const progress = Math.min(100, Math.max(0, ((investment.duration - investment.remaining) / investment.duration) * 100));
   
   return (
     <Layout>
@@ -86,18 +81,10 @@ export default function InvestmentDetail() {
         <div className="flex items-center justify-between">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <h1 className="text-3xl font-bold">{pkg?.name || "Investment"}</h1>
-              <Badge 
-                className={investment.status === 'active' 
-                  ? "bg-green-100 text-green-800" 
-                  : "bg-gray-100 text-gray-800"
-                }
-              >
-                {investment.status.charAt(0).toUpperCase() + investment.status.slice(1)}
-              </Badge>
+              <h1 className="text-3xl font-bold">{investment.product_name|| "Investment"}</h1>
             </div>
             <p className="text-muted-foreground">
-              Started on {formatDate(startDate)}
+              Started on {startDate}
             </p>
           </div>
           <Button 
@@ -118,23 +105,23 @@ export default function InvestmentDetail() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-sm text-muted-foreground">Amount Invested</p>
-                  <p className="text-lg font-semibold">Kes{investment.amount.toLocaleString()}</p>
+                  <p className="text-lg font-semibold">Kes {useFormat(investment.amount)}</p>
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Total Returns</p>
                   <p className="text-lg font-semibold text-finance-green">
-                    +Kes{investment.totalReturn.toLocaleString()}
+                    +Kes {useFormat(investment.total_returns)}
                   </p>
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Daily Return Rate</p>
                   <p className="text-lg font-semibold">
-                    {pkg?.dailyReturnRange.min}% - {pkg?.dailyReturnRange.max}%
+                    {investment.return_rate}%
                   </p>
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Duration</p>
-                  <p className="text-lg font-semibold">{totalDays} days</p>
+                  <p className="text-lg font-semibold">{investment.duration} days</p>
                 </div>
               </div>
               
@@ -145,8 +132,8 @@ export default function InvestmentDetail() {
                 <div className="mt-2 space-y-2">
                   <Progress value={progress} className="h-2" />
                   <div className="flex justify-between text-xs">
-                    <span>{daysElapsed} days elapsed</span>
-                    <span>{daysRemaining} days remaining</span>
+                    <span>{investment.duration - investment.remaining} days elapsed</span>
+                    <span>{investment.remaining} days remaining</span>
                   </div>
                 </div>
               </div>
@@ -156,23 +143,19 @@ export default function InvestmentDetail() {
               <div className="space-y-2">
                 <div className="flex justify-between">
                   <p className="text-sm">Start Date</p>
-                  <p className="text-sm font-medium">{formatDate(startDate)}</p>
-                </div>
-                <div className="flex justify-between">
-                  <p className="text-sm">End Date</p>
-                  <p className="text-sm font-medium">{formatDate(endDate)}</p>
+                  <p className="text-sm font-medium">{startDate}</p>
                 </div>
                 <div className="flex justify-between">
                   <p className="text-sm">Return Rate</p>
                   <p className="text-sm font-medium text-finance-green">
-                    +{((investment.totalReturn / investment.amount) * 100).toFixed(2)}%
+                    +{((investment.total_returns / investment.amount) * 100).toFixed(2)}%
                   </p>
                 </div>
               </div>
             </CardContent>
           </Card>
           
-          <Card className="md:col-span-2">
+          {/* <Card className="md:col-span-2">
             <CardHeader>
               <CardTitle>Returns History</CardTitle>
               <CardDescription>
@@ -182,49 +165,8 @@ export default function InvestmentDetail() {
             <CardContent>
               <ReturnsChart dailyReturns={investment.dailyReturns} />
             </CardContent>
-          </Card>
+          </Card> */}
         </div>
-        
-        {/* Returns Table */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Detailed Returns</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="rounded-md border">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b bg-muted/50">
-                    <th className="py-3 px-4 text-left">Date</th>
-                    <th className="py-3 px-4 text-right">Return Rate</th>
-                    <th className="py-3 px-4 text-right">Amount</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {investment.dailyReturns
-                    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-                    .map((item, index) => (
-                      <tr key={index} className="border-b">
-                        <td className="py-3 px-4">
-                          {new Date(item.date).toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'short',
-                            day: 'numeric'
-                          })}
-                        </td>
-                        <td className="py-3 px-4 text-right text-finance-green">
-                          +{item.percentage.toFixed(2)}%
-                        </td>
-                        <td className="py-3 px-4 text-right font-medium">
-                          +${item.amount.toFixed(2)}
-                        </td>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
-            </div>
-          </CardContent>
-        </Card>
       </div>
     </Layout>
   );

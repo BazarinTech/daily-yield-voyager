@@ -1,4 +1,4 @@
-import { getMains } from '@/lib/actions'
+import { getMains, getReturns } from '@/lib/actions'
 import React, { createContext, useContext, useEffect, useState } from 'react'
 
 type Props = {
@@ -24,6 +24,7 @@ function AuthProvider({children}: Props) {
     const mainFetcher = async (userID:number) => {
         try {
             const results  = await getMains({userID})
+            const returns = await getReturns({userID})
             setMains(results)
         } catch (error) {
             console.error('mains Fetch error:', error)

@@ -19,9 +19,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { investments, getPackageById } from "@/lib/data-service";
+import { useAuth } from "@/contexts/AuthContext";
+import useFormat from "@/hooks/useFormat";
 
 export default function History() {
   const navigate = useNavigate();
+  const { mains } = useAuth()
   const [sortBy, setSortBy] = useState<'date' | 'amount'>('date');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   
@@ -75,7 +78,7 @@ export default function History() {
             <CardTitle>All Investments</CardTitle>
           </CardHeader>
           <CardContent>
-            {sortedInvestments.length > 0 ? (
+            {mains?.user_investments.length > 0 ? (
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -84,13 +87,13 @@ export default function History() {
                       className="cursor-pointer"
                       onClick={() => handleSort('date')}
                     >
-                      Date {sortBy === 'date' && (sortOrder === 'asc' ? '↑' : '↓')}
+                      Date
                     </TableHead>
                     <TableHead 
                       className="text-right cursor-pointer"
                       onClick={() => handleSort('amount')}
                     >
-                      Amount {sortBy === 'amount' && (sortOrder === 'asc' ? '↑' : '↓')}
+                      Amount
                     </TableHead>
                     <TableHead className="text-right">Returns</TableHead>
                     <TableHead>Status</TableHead>
@@ -98,25 +101,24 @@ export default function History() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {sortedInvestments.map((investment) => {
-                    const pkg = getPackageById(investment.packageId);
+                  {mains?.user_investments.map((investment) => {
                     return (
-                      <TableRow key={investment.id}>
+                      <TableRow key={investment.ID}>
                         <TableCell className="font-medium">
-                          {pkg?.name || "Unknown Package"}
+                          {investment.product_name}
                         </TableCell>
                         <TableCell>
-                          {formatDate(investment.startDate)}
+                          {formatDate(investment.investment_date)}
                         </TableCell>
                         <TableCell className="text-right">
-                          Kes{investment.amount.toLocaleString()}
+                          Kes {useFormat(investment.amount)}
                         </TableCell>
                         <TableCell className="text-right text-finance-green">
-                          +Kes{investment.totalReturn.toLocaleString()}
+                          +Kes {useFormat(investment.total_returns)}
                         </TableCell>
                         <TableCell>
                           <Badge 
-                            className={investment.status === 'active' 
+                            className={investment.status === 'Active' 
                               ? "bg-green-100 text-green-800" 
                               : "bg-gray-100 text-gray-800"
                             }
@@ -128,7 +130,7 @@ export default function History() {
                           <Button 
                             variant="ghost" 
                             size="sm"
-                            onClick={() => navigate(`/investments/${investment.id}`)}
+                            onClick={() => navigate(`/investments/${investment.ID}`)}
                           >
                             View
                           </Button>

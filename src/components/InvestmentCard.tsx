@@ -4,22 +4,19 @@ import { Progress } from "@/components/ui/progress";
 import { Investment } from "@/types";
 import { getPackageById } from "@/lib/data-service";
 import { Badge } from "@/components/ui/badge";
+import useFormat from "@/hooks/useFormat";
 
 interface InvestmentCardProps {
   investment: InvestmentOrder;
-  onViewDetails: (investmentId: string) => void;
+  onViewDetails: (investmentId: number) => void;
 }
 
 export default function InvestmentCard({ investment, onViewDetails }: InvestmentCardProps) {
-  const pkg = getPackageById(investment.ID);
-  const startDate = new Date(investment.time);
-  const endDate = new Date(investment.time);
   const today = new Date();
   
   // Calculate days elapsed and total days
-  const totalDays = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24));
-  const daysElapsed = Math.ceil((today.getTime() - startDate.getTime()) / (1000 * 3600 * 24));
-  const progress = Math.min(100, Math.max(0, (daysElapsed / totalDays) * 100));
+
+  const progress = Math.min(100, Math.max(0, ((investment.duration - investment.remaining) / investment.duration) * 100));
   
   // Calculate return rate
   const returnRate = investment.amount > 0 
@@ -39,10 +36,10 @@ export default function InvestmentCard({ investment, onViewDetails }: Investment
     <Card className="overflow-hidden hover:shadow-md transition-shadow">
       <CardHeader className="pb-2">
         <div className="flex justify-between items-start">
-          <div>
-            <CardTitle>{pkg?.name || "Investment Package"}</CardTitle>
+          <div className="space-y-2">
+            <CardTitle>{investment.product_name || "Investment Package"}</CardTitle>
             <CardDescription>
-              Started on {formatDate(startDate)}
+              Started on {investment.investment_date}
             </CardDescription>
           </div>
           <Badge 
@@ -59,12 +56,12 @@ export default function InvestmentCard({ investment, onViewDetails }: Investment
         <div className="grid grid-cols-2 gap-4">
           <div>
             <p className="text-sm text-muted-foreground">Amount Invested</p>
-            <p className="text-lg font-semibold">Kes{investment.amount.toLocaleString()}</p>
+            <p className="text-lg font-semibold">Kes {useFormat(investment.amount)}</p>
           </div>
           <div>
             <p className="text-sm text-muted-foreground">Total Returns</p>
             <p className="text-lg font-semibold text-finance-green">
-              +Kes{investment.total_returns.toLocaleString()}
+              +Kes {useFormat(investment.total_returns)}
             </p>
           </div>
         </div>
@@ -76,14 +73,14 @@ export default function InvestmentCard({ investment, onViewDetails }: Investment
           </div>
           <Progress value={progress} className="h-2" />
           <div className="flex justify-between text-xs text-muted-foreground">
-            <span>{formatDate(startDate)}</span>
-            <span>{formatDate(endDate)}</span>
+            <span>{investment.investment_date}</span>
+            <span></span>
           </div>
         </div>
         
         <div className="pt-2">
           <p className="text-sm text-muted-foreground">Return Rate</p>
-          <p className="text-lg font-semibold text-finance-green">+{returnRate}%</p>
+          <p className="text-lg font-semibold text-finance-green">+{investment.return_rate}%</p>
         </div>
       </CardContent>
       <CardFooter>

@@ -24,6 +24,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import useFormat from "@/hooks/useFormat";
+import { useAuth } from "@/contexts/AuthContext";
+import { makeInvestment } from "@/lib/actions";
 
 interface InvestFormProps {
   packageData?: Product;
@@ -48,6 +50,7 @@ export default function InvestForm({
 }: InvestFormProps) {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const { mains, userID, mainFetcher } = useAuth()
 
   const form = useForm<z.infer<typeof investmentSchema>>({
     resolver: zodResolver(investmentSchema),
@@ -79,10 +82,10 @@ export default function InvestForm({
     }
 
     // Validate amount against user balance
-    if (values.amount > userBalance) {
+    if (values.amount > mains.wallet.balance) {
       toast({
         title: "Insufficient balance",
-        description: `Your balance is Kes ${ useFormat(userBalance)}`,
+        description: `Your balance is Kes ${ useFormat(mains.wallet.balance)}`,
         variant: "destructive",
       });
       return;
@@ -90,12 +93,23 @@ export default function InvestForm({
 
     setLoading(true);
     try {
-      onInvest(packageData.ID, values.amount);
-      toast({
-        title: "Investment successful",
-        description: `You've successfully invested Kes ${useFormat(values.amount)} in ${packageData.name}`,
-      });
-      onClose();
+      const results = await makeInvestment({userID, prodID: packageData.ID, amount: values.amount})
+      setLoading(false)
+      if (results.status == 'Success') {
+          toast({
+          title: "Investment successful",
+          description: `You've successfully invested Kes ${useFormat(values.amount)} in ${packageData.name}`,
+        });
+        mainFetcher(userID)
+        onClose();
+      }else{
+          toast({
+          title: "Investment Failed",
+          description: results.message,
+          variant: "destructive",
+        });
+      }
+      
     } catch (error) {
       toast({
         title: "Investment failed",
@@ -179,11 +193,11 @@ export default function InvestForm({
                       </div>
                     </FormControl>
                     <FormDescription className="flex justify-between">
-                      <span>Available Balance: Kes { useFormat(userBalance)}</span>
+                      <span>Available Balance: Kes { useFormat(mains.wallet.balance)}</span>
                       <button 
                         type="button" 
                         className="text-primary text-xs"
-                        onClick={() => form.setValue("amount", Math.min(userBalance, packageData.max))}
+                        onClick={() => form.setValue("amount", Math.min(mains.wallet.balance, packageData.max))}
                       >
                         Max
                       </button>
