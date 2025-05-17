@@ -112,3 +112,7 @@ type Invest = CommonFetch & {
     prodID: string
     amount: number
 }
+
+type ClaimBonus = CommonFetch & {
+    bonusID: number
+}

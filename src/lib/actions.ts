@@ -35,3 +35,15 @@ export async function getReturns({userID} : CommonFetch): Promise<GeneralRespons
     
     return await response.json()
 }
+
+export async function claimBonus({userID, bonusID} : ClaimBonus): Promise<GeneralResponse> {
+    const response = await fetch(`${apiURL}/mains/bonus.php`, {
+        method: 'post',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({userID, bonusID})
+    })
+    
+    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+    
+    return await response.json()
+}
