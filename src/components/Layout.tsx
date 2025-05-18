@@ -84,7 +84,7 @@ export default function Layout({ children, className }: LayoutProps) {
         </div>
         
         {/* Mobile header */}
-        <div className="md:hidden flex justify-between items-center p-4 border-b border-border bg-background sticky top-0">
+        <div className="md:hidden flex justify-between items-center p-4 border-b border-border bg-background sticky top-0 z-10">
           <h1 className="text-lg font-bold">
             <span className="text-primary">Pre</span>Fex
           </h1>

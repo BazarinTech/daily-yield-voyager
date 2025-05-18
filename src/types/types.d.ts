@@ -101,7 +101,9 @@ type Mains = {
     products: Product[],
     user_investments: InvestmentOrder[],
     bonuses: Bonus[],
-    transactions: Transactions[]
+    transactions: Transactions[],
+    active_investment: string,
+    average_return: string
 }
 
 type CommonFetch = {
@@ -115,4 +117,13 @@ type Invest = CommonFetch & {
 
 type ClaimBonus = CommonFetch & {
     bonusID: number
+}
+
+type ModifyAccount = {
+    userID: number,
+    email?: string,
+    phone?: string,
+    oldPassword?: string,
+    newPassword?: string
+    confirmPassword?: string,
 }

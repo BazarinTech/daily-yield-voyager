@@ -1,19 +1,101 @@
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Layout from "@/components/Layout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogFooter,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { mockUser, getInvestmentStats } from "@/lib/data-service";
-import { User, Mail, Phone, Shield, LogOut, DollarSign, LineChart, TrendingUp, ArrowUp } from "lucide-react";
+import { User, Mail, Phone, Shield, LogOut, DollarSign, LineChart, TrendingUp, ArrowUp, EyeOff, Eye } from "lucide-react";
 import StatCard from "@/components/StatCard";
 import { useAuth } from "@/contexts/AuthContext";
 import useFormat from "@/hooks/useFormat";
+import { Label } from "@/components/ui/label";
+import { updateAccount, updatePassword } from "@/lib/actions";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Profile() {
   const [editing, setEditing] = useState(false);
   const stats = getInvestmentStats();
-  const { mains, logout } = useAuth()
+  const { mains, logout, userID } = useAuth()
+  const [isPass, setIsPass] = useState(false)
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showOldPassword, setShowOldPassword] = useState(false);
+  const [showConPassword, setShowConPassword] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+  const [oldPassword, setOldPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [phone, setPhone] = useState("")
+  const [isSave, setIsSave] = useState(false)
+  const [isPasswordUpdate, setIsPasswordUpdate] = useState(false)
+  const { toast } = useToast();
+
+  useEffect(() => {
+    if (mains) {
+      setPhone(mains.user.phone)
+    }
+  }, [mains])
+
+  const handleSaveAccount = async () => {
+    setIsSave(true)
+    try {
+      const results = await updateAccount({userID, email: mains.user.email, phone})
+      if (results.status == "Success") {
+        toast({
+          title: "Operation Success!",
+          description: results.message,
+        });
+      }else{
+        toast({
+          title: "Operation failed!",
+          description: results.message,
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Account Update Error:", error)
+    }
+    setIsSave(false)
+  }
+
+   const handleUpdatePassword = async () => {
+    if (newPassword && oldPassword && confirmPassword) {
+        setIsPasswordUpdate(true)
+        try {
+          const results = await updatePassword({userID, oldPassword, newPassword, confirmPassword})
+          if (results.status == "Success") {
+            toast({
+              title: "Operation Success!",
+              description: results.message,
+            });
+          }else{
+            toast({
+              title: "Operation failed!",
+              description: results.message,
+              variant: "destructive",
+            });
+          }
+        } catch (error) {
+          console.error("Account Update Error:", error)
+        }
+        setIsPasswordUpdate(false)
+      }else{
+        toast({
+              title: "Operation failed!",
+              description: "You have some empty fields!",
+              variant: "destructive",
+            });
+      }
+    }
+
   
   return (
     <Layout>
@@ -36,7 +118,7 @@ export default function Profile() {
           />
           <StatCard
             title="Active Investments"
-            value={stats.activeInvestments.toString()}
+            value={mains ? mains.active_investment : '0'}
             description="Currently running"
             icon={<LineChart className="h-4 w-4" />}
             trend={0}
@@ -51,7 +133,7 @@ export default function Profile() {
           />
           <StatCard
             title="Average Return"
-            value={`${stats.averageReturn}%`}
+            value={`${mains ? mains.average_return : 0}%`}
             description="Return on investment"
             icon={<ArrowUp className="h-4 w-4" />}
             trend={1.8}
@@ -69,9 +151,7 @@ export default function Profile() {
                 <p className="text-sm text-muted-foreground">Available Balance</p>
                 <p className="text-3xl font-bold">kes {useFormat(mains ? mains.wallet.balance : 0)}</p>
               </div>
-              <Button className="bg-gradient-to-r from-finance-teal to-finance-blue hover:opacity-90">
-                Deposit Funds
-              </Button>
+              
             </div>
           </CardContent>
         </Card>
@@ -100,9 +180,10 @@ export default function Profile() {
                 <div className="relative">
                   <Phone className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
                   <Input
-                    value={mains ? mains.user.phone : ''}
+                    value={phone}
                     readOnly={!editing}
                     className="pl-10"
+                    onChange={(e) => setPhone(e.target.value)}
                   />
                 </div>
               </div>
@@ -112,7 +193,7 @@ export default function Profile() {
             <Button variant="outline" onClick={() => setEditing(!editing)}>
               {editing ? "Cancel" : "Edit Profile"}
             </Button>
-            {editing && <Button>Save Changes</Button>}
+            {editing && <Button onClick={handleSaveAccount} disabled={isSave}>{isSave ? 'Saving...' : 'Save Changes'}</Button>}
           </CardFooter>
         </Card>
         
@@ -123,19 +204,11 @@ export default function Profile() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <div>
-                <Button variant="outline" className="w-full justify-start">
+                <Button variant="outline" onClick={() => setIsPass(true)} className="w-full justify-start">
                   <Shield className="mr-2 h-4 w-4" />
                   Change Password
                 </Button>
               </div>
-              <div>
-                <Button variant="outline" className="w-full justify-start">
-                  <Shield className="mr-2 h-4 w-4" />
-                  Enable Two-Factor Authentication
-                </Button>
-              </div>
-            </div>
           </CardContent>
         </Card>
         
@@ -151,6 +224,81 @@ export default function Profile() {
           </CardContent>
         </Card>
       </div>
+
+      <Dialog onOpenChange={setIsPass} open={isPass}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Modify Password</DialogTitle>
+              <DialogDescription>
+                Enter Old and new then confirm it to change your password
+              </DialogDescription>
+            </DialogHeader>
+              <div className="grid gap-4 py-4">
+              <div className="grid gap-2">
+                <Label htmlFor="old-pass">Old password</Label>
+                <div className="relative">
+                  <Input
+                    id="old-pass"
+                    placeholder="Enter Old Password"
+                    className="pl-2 pr-10"
+                    type={showOldPassword ? "text" : "password"}
+                    onChange={(e) => setOldPassword(e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowOldPassword((prev) => !prev)}
+                    className="absolute right-2 top-2.5 text-muted-foreground hover:text-foreground"
+                  >
+                    {showOldPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  </button>
+                </div>
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="old-pass">New password</Label>
+                <div className="relative">
+                  <Input
+                    id="new-pass"
+                    placeholder="Enter New Password"
+                    className="pl-2 pr-10"
+                    type={showNewPassword ? "text" : "password"}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowNewPassword((prev) => !prev)}
+                    className="absolute right-2 top-2.5 text-muted-foreground hover:text-foreground"
+                  >
+                    {showNewPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  </button>
+                </div>
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="old-pass">Confirm password</Label>
+                <div className="relative">
+                  <Input
+                    id="new-pass"
+                    placeholder="Confirm new Password"
+                    className="pl-2 pr-10"
+                    type={showConPassword ? "text" : "password"}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConPassword((prev) => !prev)}
+                    className="absolute right-2 top-2.5 text-muted-foreground hover:text-foreground"
+                  >
+                    {showConPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  </button>
+                </div>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button disabled={isPasswordUpdate} onClick={handleUpdatePassword}>
+                 {isPasswordUpdate ? 'Updating...' : 'Update Password'}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
     </Layout>
   );
 }

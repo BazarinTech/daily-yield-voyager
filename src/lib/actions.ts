@@ -47,3 +47,27 @@ export async function claimBonus({userID, bonusID} : ClaimBonus): Promise<Genera
     
     return await response.json()
 }
+
+export async function updateAccount({userID, email, phone} : ModifyAccount): Promise<GeneralResponse> {
+    const response = await fetch(`${apiURL}/mains/account.php`, {
+        method: 'post',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({userID, email, phone, type: 'account'})
+    })
+    
+    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+    
+    return await response.json()
+}
+
+export async function updatePassword({userID, oldPassword, newPassword, confirmPassword} : ModifyAccount): Promise<GeneralResponse> {
+    const response = await fetch(`${apiURL}/mains/account.php`, {
+        method: 'post',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({userID, oldPassword, newPassword, confirmPassword, type: 'password'})
+    })
+    
+    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+    
+    return await response.json()
+}
