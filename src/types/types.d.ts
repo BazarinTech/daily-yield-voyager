@@ -70,7 +70,7 @@ type Bonus = {
 type Product = {
     ID: string,
     name: string,
-    return: number,
+    returns: number,
     min: number,
     max: number,
     status: string,

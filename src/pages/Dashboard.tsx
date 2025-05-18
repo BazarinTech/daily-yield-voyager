@@ -115,7 +115,7 @@ export default function Dashboard() {
                       <div className="space-y-2 md:space-y-1">
                         <div className="flex items-center">
                           <Star className="h-4 w-4 text-finance-accent mr-2" />
-                          <span className="text-sm">{pkg.return}% Daily Return</span>
+                          <span className="text-sm">{pkg.returns}% Daily Return</span>
                         </div>
                         <div className="flex items-center">
                           <Calendar className="h-4 w-4 text-finance-accent mr-2" />

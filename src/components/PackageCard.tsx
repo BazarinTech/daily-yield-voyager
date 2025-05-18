@@ -60,7 +60,7 @@ export default function PackageCard({ pkg, onInvest, className }: PackageCardPro
           <div>
             <p className="text-sm text-muted-foreground">Daily Return</p>
             <p className="text-lg font-semibold">
-              {pkg.return}% 
+              {pkg.returns}% 
             </p>
           </div>
           <div>

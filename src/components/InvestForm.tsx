@@ -126,8 +126,8 @@ export default function InvestForm({
   // Calculate estimated returns
   const calculateEstimatedReturns = () => {
     const amount = form.getValues("amount") || 0;
-    const min = (amount * packageData.return * packageData.duration) / 100;
-    const max = (amount * packageData.return * packageData.duration) / 100;
+    const min = (amount * packageData.returns * packageData.duration) / 100;
+    const max = (amount * packageData.returns * packageData.duration) / 100;
     return { min: min.toFixed(2), max: max.toFixed(2) };
   };
   
@@ -160,7 +160,7 @@ export default function InvestForm({
                   <div className="bg-secondary/50 p-2 rounded-md">
                     <p className="text-muted-foreground">Daily Return</p>
                     <p className="font-medium">
-                      {packageData.return}
+                      {packageData.returns}
                     </p>
                   </div>
                   <div className="bg-secondary/50 p-2 rounded-md">
