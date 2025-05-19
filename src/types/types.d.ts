@@ -30,7 +30,9 @@ type User = {
     phone: string,
     date_joined: string
     status: string,
-    upline: string
+    upline: string,
+    ID?: string,
+    date_created?: string
 }
 
 type Wallet = {

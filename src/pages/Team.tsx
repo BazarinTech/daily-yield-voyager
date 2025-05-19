@@ -4,8 +4,11 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Users, ClipboardCopy } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "@/contexts/AuthContext";
+import useFormat from "@/hooks/useFormat";
 
 export default function Team() {
+  const { mains, userID } = useAuth()
   // Mock referral data
   const referrals = [
     { id: 1, name: "Sarah Johnson", level: 1, joinDate: "2023-04-15", active: true, earnings: 120 },
@@ -52,7 +55,7 @@ export default function Team() {
             <CardContent>
               <div className="flex items-center gap-2">
                 <Users className="h-5 w-5 text-primary" />
-                <span className="text-2xl font-bold">{referrals.length}</span>
+                <span className="text-2xl font-bold">{mains?.referral.total_downlines}</span>
               </div>
             </CardContent>
           </Card>
@@ -65,7 +68,7 @@ export default function Team() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-finance-green">
-                Kes{referrals.reduce((sum, ref) => sum + ref.earnings, 0)}
+                Kes {useFormat(mains ? mains.wallet.invite_income : 0)}
               </div>
             </CardContent>
           </Card>
@@ -73,12 +76,12 @@ export default function Team() {
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">
-                Level 1 Referrals
+                Active downlines
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {referrals.filter(ref => ref.level === 1).length}
+                {mains?.referral.active_downlines}
               </div>
             </CardContent>
           </Card>
@@ -89,18 +92,18 @@ export default function Team() {
             <CardTitle>Your Team</CardTitle>
           </CardHeader>
           <CardContent>
-            {referrals.length > 0 ? (
+            {mains?.referral.downlines.length > 0 ? (
               <div className="space-y-4">
-                {referrals.map(referral => (
-                  <div key={referral.id} className="flex items-center justify-between border-b border-border pb-4 last:border-0 last:pb-0">
+                {mains?.referral.downlines.map(downline => (
+                  <div key={downline.ID} className="flex items-center justify-between border-b border-border pb-4 last:border-0 last:pb-0">
                     <div>
-                      <div className="font-medium">{referral.name}</div>
+                      <div className="font-medium">{downline.email}</div>
                       <div className="text-sm text-muted-foreground">
-                        Level {referral.level} • Joined {new Date(referral.joinDate).toLocaleDateString()}
+                       Joined: {downline.date_created}
                       </div>
                     </div>
-                    <div className="text-finance-green font-medium">
-                      Kes{referral.earnings}
+                    <div className={` ${downline.status == 'Active' ? 'text-finance-green' : 'text-finance-red' } font-medium`}>
+                      {downline.status}
                     </div>
                   </div>
                 ))}
