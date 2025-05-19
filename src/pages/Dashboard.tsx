@@ -25,16 +25,26 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogFooter,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 
 export default function Dashboard() {
   const navigate = useNavigate();
   const [stats, setStats] = useState(() => getInvestmentStats());
   const [activeInvestments, setActiveInvestments] = useState<Product[]>([]);
   const { mains } = useAuth()
+  const [onBoardModal, setOnBoardModal] = useState(false)
 
   // Quick access menu items
   const quickMenuItems = [
-    { name: "Group", icon: MessageCircle, path: "/", color: "bg-finance-teal text-white" },
+    { name: "Group", icon: MessageCircle, path: "https://chat.whatsapp.com/BV85A7KjFKP4hGHDcvTyg6", color: "bg-finance-teal text-white" },
     { name: "Team", icon: Users, path: "/team", color: "bg-finance-blue text-white" },
     { name: "History", icon: BarChart3, path: "/history", color: "bg-finance-accent text-finance-blue" },
     { name: "Support", icon: HelpCircle, path: "/support", color: "bg-muted text-foreground" }
@@ -69,6 +79,17 @@ export default function Dashboard() {
     }
 
   }, [mains]);
+
+  useEffect(() => {
+    const isCom = localStorage.getItem('isCom');
+    if (isCom) {
+      setOnBoardModal(false)
+    }else{
+      localStorage.setItem('isCom', 'true')
+      setOnBoardModal(true)
+
+    }
+  }, [])
   
   return (
     <Layout>
@@ -177,6 +198,27 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+
+      <Dialog onOpenChange={setOnBoardModal} open={onBoardModal}>
+          <DialogContent>
+            <DialogHeader className="space-y-2">
+              <DialogTitle>Become Part of Our Community!</DialogTitle>
+              <DialogDescription>
+                Join Our whatsapp group to get the latest updates and news. And gain experience in the field of finance.
+              </DialogDescription>
+            </DialogHeader>
+              <div className="grid place-items-center w-full gap-4 py-4">
+              <img src="/Community.png" alt="WhatsApp" width="60%" className="rounded" />
+            </div>
+            <DialogFooter>
+              <Button onClick={() => {
+                location.replace('https://chat.whatsapp.com/BV85A7KjFKP4hGHDcvTyg6')
+              }}>
+                 Join
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
     </Layout>
   );
 }
