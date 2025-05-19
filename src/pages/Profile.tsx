@@ -25,7 +25,7 @@ import { useToast } from "@/hooks/use-toast";
 export default function Profile() {
   const [editing, setEditing] = useState(false);
   const stats = getInvestmentStats();
-  const { mains, logout, userID } = useAuth()
+  const { mains, logout, userID, mainFetcher } = useAuth()
   const [isPass, setIsPass] = useState(false)
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showOldPassword, setShowOldPassword] = useState(false);
@@ -60,6 +60,7 @@ export default function Profile() {
           variant: "destructive",
         });
       }
+      mainFetcher(userID)
     } catch (error) {
       console.error("Account Update Error:", error)
     }
