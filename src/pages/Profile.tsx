@@ -104,7 +104,7 @@ export default function Profile() {
         
         <div className="flex justify-center">
           <div className="w-20 h-20 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-2xl font-semibold">
-            {mockUser.name.charAt(0)}
+            {mains?.user.email.charAt(0)}
           </div>
         </div>
 

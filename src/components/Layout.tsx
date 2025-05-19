@@ -7,6 +7,8 @@ import MobileNavigation from "./MobileNavigation";
 import { Button } from "@/components/ui/button";
 import { User, Gift } from "lucide-react";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { useAuth } from "@/contexts/AuthContext";
+import useFormat from "@/hooks/useFormat";
 
 interface LayoutProps {
   children: ReactNode;
@@ -22,6 +24,7 @@ export default function Layout({ children, className }: LayoutProps) {
     { name: "History", path: "/history", icon: "📜" },
     { name: "Bonus", path: "/bonus", icon: "🎁" },
   ];
+  const { mains } = useAuth()
 
   const isAuthenticated = true; // For demo purposes, in real app this would be from auth context/state
 
@@ -62,14 +65,14 @@ export default function Layout({ children, className }: LayoutProps) {
             <div className="p-4 border-t border-sidebar-border">
               <div className="flex items-center">
                 <div className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-medium">
-                  {mockUser.name.charAt(0)}
+                  {mains?.user.email.charAt(0)}
                 </div>
                 <div className="ml-3">
                   <p className="text-sm font-medium text-sidebar-foreground">
-                    {mockUser.name}
+                    Portfolio
                   </p>
                   <p className="text-xs text-sidebar-foreground/70">
-                    Balance: ${mockUser.balance.toLocaleString()}
+                    Balance: Kes {useFormat(mains ? mains.wallet.balance : 0)}
                   </p>
                 </div>
               </div>
