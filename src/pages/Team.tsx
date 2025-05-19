@@ -9,13 +9,6 @@ import useFormat from "@/hooks/useFormat";
 
 export default function Team() {
   const { mains, userID } = useAuth()
-  // Mock referral data
-  const referrals = [
-    { id: 1, name: "Sarah Johnson", level: 1, joinDate: "2023-04-15", active: true, earnings: 120 },
-    { id: 2, name: "Michael Smith", level: 1, joinDate: "2023-04-22", active: true, earnings: 85 },
-    { id: 3, name: "Jessica Brown", level: 2, joinDate: "2023-05-03", active: true, earnings: 45 },
-  ];
-
   return (
     <Layout>
       <div className="space-y-6">

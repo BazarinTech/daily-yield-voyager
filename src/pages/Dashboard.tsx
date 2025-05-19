@@ -12,23 +12,18 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { 
-  mockUser, 
-  investments,
   getInvestmentStats,
-  packages
 } from "@/lib/data-service";
-import { Investment } from "@/types";
 import {
   ArrowRight,
   Users,
   BarChart3,
   HelpCircle,
   Calendar,
-  TrendingUp,
-  Star
+  Star,
+  MessageCircle
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { Separator } from "@/components/ui/separator";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function Dashboard() {
@@ -36,13 +31,10 @@ export default function Dashboard() {
   const [stats, setStats] = useState(() => getInvestmentStats());
   const [activeInvestments, setActiveInvestments] = useState<Product[]>([]);
   const { mains } = useAuth()
-  
-  // Featured investment packages
-  const featuredPackages = packages.slice(0, 3);
 
   // Quick access menu items
   const quickMenuItems = [
-    { name: "Deposit", icon: TrendingUp, path: "/deposit", color: "bg-finance-teal text-white" },
+    { name: "Group", icon: MessageCircle, path: "/", color: "bg-finance-teal text-white" },
     { name: "Team", icon: Users, path: "/team", color: "bg-finance-blue text-white" },
     { name: "History", icon: BarChart3, path: "/history", color: "bg-finance-accent text-finance-blue" },
     { name: "Support", icon: HelpCircle, path: "/support", color: "bg-muted text-foreground" }
