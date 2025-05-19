@@ -1,7 +1,6 @@
 
 import Layout from "@/components/Layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { mockUser } from "@/lib/data-service";
 import { Button } from "@/components/ui/button";
 import { 
   Dialog, 
@@ -19,56 +18,99 @@ import { useToast } from "@/hooks/use-toast";
 import { Wallet, Plus, ArrowDown, ArrowUp } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import useFormat from "@/hooks/useFormat";
+import { deposit, withdraw } from "@/lib/actions";
 
 export default function Transactions() {
-  const { mains } = useAuth()
+  const { mains, userID,mainFetcher } = useAuth()
   const [depositAmount, setDepositAmount] = useState<string>("");
+  const [depositAccount, setDepositAccount] = useState('')
   const [withdrawAmount, setWithdrawAmount] = useState<string>("");
+  const [isLoading, setLoading] = useState(false)
   const { toast } = useToast();
   
-  const handleDeposit = () => {
+  const handleDeposit = async() => {
     if (!depositAmount || isNaN(Number(depositAmount)) || Number(depositAmount) <= 0) {
       toast({
-        title: "Invalid amount",
+        title: "Invalid amount!",
         description: "Please enter a valid amount greater than 0",
         variant: "destructive"
       });
       return;
     }
 
-    toast({
-      title: "Deposit successful",
-      description: `$${depositAmount} has been added to your account`,
-    });
+    if (!depositAccount || isNaN(Number(depositAccount)) || Number(depositAccount) <= 0) {
+      toast({
+        title: "Invalid Phone number!",
+        description: "Please enter a valid mpesa phone number",
+        variant: "destructive"
+      });
+      return;
+    }
+    setLoading(true)
+    try {
+      const results = await deposit({userID, amount: depositAmount, account: depositAccount})
+      if (results.status == "Success") {
+          toast({
+            title: "Stk Successfull!",
+            description: results.message,
+          });
+      }else{
+        toast({
+            title: "Stk Failed!",
+            description: results.message,
+            variant: "destructive"
+          });
+      }
+      mainFetcher(userID)
+    } catch (error) {
+      console.error("Deposit Error:", error)
+    }
     
     setDepositAmount("");
+    setDepositAccount("")
+    setLoading(false)
   };
 
-  const handleWithdraw = () => {
+  const handleWithdraw = async() => {
     if (!withdrawAmount || isNaN(Number(withdrawAmount)) || Number(withdrawAmount) <= 0) {
       toast({
-        title: "Invalid amount",
+        title: "Invalid amount!",
         description: "Please enter a valid amount greater than 0",
         variant: "destructive"
       });
       return;
     }
 
-    if (Number(withdrawAmount) > mockUser.balance) {
+    if (Number(withdrawAmount) > mains.wallet.balance) {
       toast({
-        title: "Insufficient funds",
+        title: "Insufficient funds!",
         description: "You don't have enough balance for this withdrawal",
         variant: "destructive"
       });
       return;
     }
 
-    toast({
-      title: "Withdrawal initiated",
-      description: `$${withdrawAmount} withdrawal is being processed`,
-    });
+     try {
+      const results = await withdraw({userID, amount: withdrawAmount, account: mains.user.phone})
+      if (results.status == "Success") {
+          toast({
+            title: "Transaction Successfull!",
+            description: results.message,
+          });
+      }else{
+        toast({
+            title: "Transaction Failed!",
+            description: results.message,
+            variant: "destructive"
+          });
+      }
+      mainFetcher(userID)
+    } catch (error) {
+      console.error("Deposit Error:", error)
+    }
     
     setWithdrawAmount("");
+    setLoading(false)
   };
 
   return (
@@ -104,13 +146,12 @@ export default function Transactions() {
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
                   <div className="grid gap-2">
-                    <Label htmlFor="deposit-amount">Amount</Label>
+                    <Label htmlFor="deposit-amount">Amount(kes)</Label>
                     <div className="relative">
-                      <span className="absolute left-3 top-2.5 text-muted-foreground">Kes </span>
                       <Input
                         id="deposit-amount"
                         placeholder="Enter amount"
-                        className="pl-8"
+                        className=""
                         type="number" 
                         value={depositAmount}
                         onChange={(e) => setDepositAmount(e.target.value)}
@@ -118,16 +159,22 @@ export default function Transactions() {
                     </div>
                   </div>
                   <div className="grid gap-2">
-                    <Label htmlFor="payment-method">Payment Method</Label>
-                    <div className="flex items-center h-10 px-3 border rounded-md border-input bg-background">
-                      <Wallet className="mr-2 h-4 w-4 text-muted-foreground" />
-                      <span>Credit/Debit Card (Default)</span>
+                    <Label htmlFor="payment-method">Payment Phone(Mpesa)</Label>
+                    <div className="flex items-center h-10 border rounded-md border-input bg-background">
+                      <Input
+                        id="deposit-amount"
+                        placeholder="Enter mpesa phone"
+                        className=""
+                        type="tel" 
+                        value={depositAccount}
+                        onChange={(e) => setDepositAccount(e.target.value)}
+                      />
                     </div>
                   </div>
                 </div>
                 <DialogFooter>
-                  <Button onClick={handleDeposit}>
-                    <ArrowDown className="mr-2 h-4 w-4" /> Deposit Funds
+                  <Button onClick={handleDeposit} disabled={isLoading}>
+                    <ArrowDown className="mr-2 h-4 w-4" /> {isLoading ? 'Initiating...' : 'Deposit Funds'} 
                   </Button>
                 </DialogFooter>
               </DialogContent>
@@ -141,20 +188,18 @@ export default function Transactions() {
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Withdraw Funds</DialogTitle>
+                  <DialogTitle>Withdraw Funds  (Fee 8%)</DialogTitle>
                   <DialogDescription>
-                    Withdraw funds from your investment account.
+                    Withdraw funds instantly. Ensure to have correct details beacuse all transactions are irreversible
                   </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
                   <div className="grid gap-2">
                     <Label htmlFor="withdraw-amount">Amount</Label>
                     <div className="relative">
-                      <span className="absolute left-3 top-2.5 text-muted-foreground">Kes</span>
                       <Input
                         id="withdraw-amount"
                         placeholder="Enter amount"
-                        className="pl-8"
                         type="number"
                         value={withdrawAmount}
                         onChange={(e) => setWithdrawAmount(e.target.value)}
@@ -163,16 +208,16 @@ export default function Transactions() {
                     <p className="text-sm text-muted-foreground">Available: Kes {useFormat(mains ? mains.wallet.balance : 0)}</p>
                   </div>
                   <div className="grid gap-2">
-                    <Label htmlFor="bank-account">Bank Account</Label>
+                    <Label htmlFor="bank-account">Mpesa Account (To change, head to your profile)</Label>
                     <div className="flex items-center h-10 px-3 border rounded-md border-input bg-background">
                       <Wallet className="mr-2 h-4 w-4 text-muted-foreground" />
-                      <span>Bank Account (Default)</span>
+                      <span>{mains?.user.phone}</span>
                     </div>
                   </div>
                 </div>
                 <DialogFooter>
                   <Button onClick={handleWithdraw}>
-                    <ArrowUp className="mr-2 h-4 w-4" /> Withdraw Funds
+                    <ArrowUp className="mr-2 h-4 w-4" /> {isLoading ? 'Initiating...' : 'Withdraw Funds'} 
                   </Button>
                 </DialogFooter>
               </DialogContent>
@@ -212,13 +257,13 @@ export default function Transactions() {
               {mains?.transactions.map((tx) => (
                 <div key={tx.ID} className="flex items-center justify-between border-b border-border pb-4 last:border-0 last:pb-0">
                   <div>
-                    <div className="font-medium">{tx.type}</div>
+                    <div className="font-medium">{tx.type} <span className={` ${tx.status == 'Success' ? 'bg-green-500/30 text-green-800' : 'bg-red-500/30 text-red-800'} px-2 text-sm py-1 rounded font-bold `}>{tx.status}</span></div>
                     <div className="text-sm text-muted-foreground">
-                      {new Date(tx.time).toLocaleDateString()}
+                      {tx.time}
                     </div>
                   </div>
-                  <div className={`font-medium ${tx.type === 'Deposit' ? 'text-finance-green' : ''}`}>
-                    {tx.type === 'Deposit' ? '+' : '-'} kes { useFormat(tx.amount)}
+                  <div className={`font-medium ${tx.type === 'Deposit' ? 'text-finance-green' : 'text-finance-red'}`}>
+                    {tx.type === 'Deposit' ? '+' : '-'}kes { useFormat(tx.amount)}
                   </div>
                 </div>
               ))}

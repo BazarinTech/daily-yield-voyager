@@ -127,3 +127,9 @@ type ModifyAccount = {
     newPassword?: string
     confirmPassword?: string,
 }
+
+type Transact = {
+    userID: number,
+    amount: string,
+    account: string
+}

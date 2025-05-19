@@ -71,3 +71,27 @@ export async function updatePassword({userID, oldPassword, newPassword, confirmP
     
     return await response.json()
 }
+
+export async function deposit({userID, amount, account} : Transact): Promise<GeneralResponse> {
+    const response = await fetch(`${apiURL}/mains/deposit.php`, {
+        method: 'post',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({userID, amount, account})
+    })
+    
+    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+    
+    return await response.json()
+}
+
+export async function withdraw({userID, amount, account} : Transact): Promise<GeneralResponse> {
+    const response = await fetch(`${apiURL}/mains/withdraw.php`, {
+        method: 'post',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({userID, amount, account})
+    })
+    
+    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+    
+    return await response.json()
+}
