@@ -160,7 +160,7 @@ export default function InvestForm({
                   <div className="bg-secondary/50 p-2 rounded-md">
                     <p className="text-muted-foreground">Daily Return</p>
                     <p className="font-medium">
-                      {packageData.returns}
+                      {packageData.returns}%
                     </p>
                   </div>
                   <div className="bg-secondary/50 p-2 rounded-md">
