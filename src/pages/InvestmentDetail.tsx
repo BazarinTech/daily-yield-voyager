@@ -5,16 +5,12 @@ import Layout from "@/components/Layout";
 import { 
   Card, 
   CardContent, 
-  CardDescription, 
   CardHeader, 
   CardTitle 
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
-import ReturnsChart from "@/components/ReturnsChart";
-import { getPackageById } from "@/lib/data-service";
 import { useAuth } from "@/contexts/AuthContext";
 import useFormat from "@/hooks/useFormat";
 
@@ -26,7 +22,7 @@ export default function InvestmentDetail() {
   const [loading, setLoading] = useState(true);
 
   const getInvestmentById = (id: string) => {
-  const selectedPackage = mains.user_investments.find(pkg => pkg.ID === Number(id));
+  const selectedPackage = mains.user_investments.find(pkg => pkg.ID == Number(id));
   return selectedPackage;
 };
 
