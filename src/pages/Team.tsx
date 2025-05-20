@@ -6,9 +6,31 @@ import { Users, ClipboardCopy } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/contexts/AuthContext";
 import useFormat from "@/hooks/useFormat";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Team() {
   const { mains, userID } = useAuth()
+  const [copied, setCopied] = useState(false);
+  const link = `https://prefexai.club/auth?upline=${userID}`;
+  const { toast } = useToast()
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(link);
+        toast({
+          title: "Copied Succefully!",
+          description: "Now you can share you link to family and friends!",
+        });
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000); // reset copied state after 2 seconds
+    } catch (err) {
+      console.error("Failed to copy!", err);
+      toast({
+          title: "Failed to copy!",
+          description: "Select the refferal link and copy manualy!",
+        });
+    }
+  };
   return (
     <Layout>
       <div className="space-y-6">
@@ -28,10 +50,10 @@ export default function Team() {
             <div className="flex items-center gap-2">
               <Input
                 readOnly
-                value="https://forexyield.com/ref/johndoe123"
+                value={`https://prefexai.club/auth?upline=${userID}`}
                 className="font-mono text-sm"
               />
-              <Button variant="outline" size="icon">
+              <Button variant="outline" size="icon" onClick={handleCopy}>
                 <ClipboardCopy className="h-4 w-4" />
               </Button>
             </div>

@@ -1,6 +1,6 @@
 
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -39,12 +39,22 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 type RegisterFormValues = z.infer<typeof registerSchema>;
 
 export default function Auth() {
+  const [searchParams] = useSearchParams();
+  const uplineID = searchParams.get("upline");
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<string>("login");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false)
   const { loginA } = useAuth()
+  const [upline, setUpline] = useState('2')
+
+  useEffect(() => {
+        if (uplineID) {
+          setUpline(uplineID)
+        }
+      
+    }, [uplineID]);
 
   const loginForm = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -94,7 +104,7 @@ export default function Auth() {
   const onRegisterSubmit = async(values: RegisterFormValues) => {
     setIsLoading(true)
     try {
-      const results = await register({email: values.email, password: values.password, confirmPassword: values.confirmPassword, phone: values.phone, upline: '0', type: 'register'});
+      const results = await register({email: values.email, password: values.password, confirmPassword: values.confirmPassword, phone: values.phone, upline, type: 'register'});
       setIsLoading(false)
       if (results.status == 'Success') {
           // Simulate register success
