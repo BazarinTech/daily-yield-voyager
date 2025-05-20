@@ -55,7 +55,7 @@ export default function InvestForm({
   const form = useForm<z.infer<typeof investmentSchema>>({
     resolver: zodResolver(investmentSchema),
     defaultValues: {
-      amount: packageData?.min || 100,
+      amount: packageData?.min || 1000,
     },
   });
 
@@ -175,15 +175,11 @@ export default function InvestForm({
                 name="amount"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Investment Amount</FormLabel>
+                    <FormLabel>Investment Amount(Kes)</FormLabel>
                     <FormControl>
                       <div className="relative">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
-                          Kes
-                        </span>
                         <Input 
                           type="number" 
-                          className="pl-7" 
                           {...field} 
                           onChange={(e) => {
                             field.onChange(e);

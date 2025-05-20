@@ -142,7 +142,7 @@ export default function InvestmentDetail() {
                   <p className="text-sm font-medium">{startDate}</p>
                 </div>
                 <div className="flex justify-between">
-                  <p className="text-sm">Return Rate</p>
+                  <p className="text-sm">Total Return Rate</p>
                   <p className="text-sm font-medium text-finance-green">
                     +{((investment.total_returns / investment.amount) * 100).toFixed(2)}%
                   </p>

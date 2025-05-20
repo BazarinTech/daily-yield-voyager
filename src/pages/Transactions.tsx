@@ -72,6 +72,7 @@ export default function Transactions() {
   };
 
   const handleWithdraw = async() => {
+
     if (!withdrawAmount || isNaN(Number(withdrawAmount)) || Number(withdrawAmount) <= 0) {
       toast({
         title: "Invalid amount!",
@@ -89,7 +90,8 @@ export default function Transactions() {
       });
       return;
     }
-
+    
+    setLoading(true)
      try {
       const results = await withdraw({userID, amount: withdrawAmount, account: mains.user.phone})
       if (results.status == "Success") {
@@ -216,7 +218,7 @@ export default function Transactions() {
                   </div>
                 </div>
                 <DialogFooter>
-                  <Button onClick={handleWithdraw}>
+                  <Button onClick={handleWithdraw} disabled={isLoading}>
                     <ArrowUp className="mr-2 h-4 w-4" /> {isLoading ? 'Initiating...' : 'Withdraw Funds'} 
                   </Button>
                 </DialogFooter>

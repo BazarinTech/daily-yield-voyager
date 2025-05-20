@@ -59,7 +59,7 @@ export default function Dashboard() {
     {
       title: "Market Update: Forex Trends in 2025",
       excerpt: "Latest trends in the forex market and what they mean for investors.",
-      image: "https://images.unsplash.com/photo-1607266443557-2a82e5edb348?q=80&w=500&auto=format&fit=crop",
+      image: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=500&auto=format&fit=crop",
       date: "May 3, 2025"
     },
     {
