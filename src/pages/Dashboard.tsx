@@ -89,9 +89,8 @@ export default function Dashboard() {
     if (isCom) {
       setOnBoardModal(false)
     }else{
-      localStorage.setItem('isCom', 'true')
       setOnBoardModal(true)
-
+      localStorage.setItem('isCom', 'true')
     }
   }, [])
   

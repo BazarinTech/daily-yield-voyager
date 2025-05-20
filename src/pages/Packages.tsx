@@ -1,13 +1,13 @@
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Layout from "@/components/Layout";
 import PackageCard from "@/components/PackageCard";
 import InvestForm from "@/components/InvestForm";
-import { packages, createInvestment, mockUser } from "@/lib/data-service";
 
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import useFormat from "@/hooks/useFormat";
 
 export default function Packages() {
   const navigate = useNavigate();
@@ -15,7 +15,13 @@ export default function Packages() {
   const { mains } = useAuth()
   const [selectedPackage, setSelectedPackage] = useState<Product | undefined>();
   const [isInvestFormOpen, setIsInvestFormOpen] = useState(false);
-  const [userBalance, setUserBalance] = useState(mockUser.balance);
+  const [userBalance, setUserBalance] = useState(0);
+
+  useEffect(() => {
+    if (mains) {
+      setUserBalance(mains.wallet.balance)
+    }
+  }, [mains])
   
   const handleInvest = (packageId: string) => {
     const pkg = mains.products.find(p => p.ID === packageId);
@@ -23,7 +29,7 @@ export default function Packages() {
       if (userBalance < pkg.min) {
         toast({
           title: "Insufficient balance",
-          description: `You need at least $${pkg.min.toLocaleString()} to invest in this package.`,
+          description: `You need at least Kes ${useFormat(pkg.min)} to invest in this package.`,
           variant: "destructive",
         });
         return;
@@ -35,13 +41,12 @@ export default function Packages() {
   
   const handleInvestSubmit = (packageId: string, amount: number) => {
     try {
-      const investment = createInvestment(packageId, amount);
       setUserBalance(mains?.wallet.balance);
       toast({
         title: "Investment successful",
-        description: `Your investment of $${amount.toLocaleString()} has been processed.`,
+        description: `Your investment of Kes ${useFormat(amount)} has been processed.`,
       });
-      setTimeout(() => navigate(`/investments/${investment.id}`), 500);
+      setTimeout(() => navigate(`/investments`), 500);
     } catch (error) {
       toast({
         title: "Investment failed",
