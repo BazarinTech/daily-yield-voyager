@@ -96,7 +96,7 @@ export default function Layout({ children, className }: LayoutProps) {
             {isAuthenticated ? (
               <Link to="/profile">
                 <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-medium">
-                  {mockUser.name.charAt(0)}
+                  {mains?.user.email.charAt(0)}
                 </div>
               </Link>
             ) : (

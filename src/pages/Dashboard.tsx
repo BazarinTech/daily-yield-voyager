@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -34,6 +34,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import Autoplay from "embla-carousel-autoplay"
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -41,6 +42,9 @@ export default function Dashboard() {
   const [activeInvestments, setActiveInvestments] = useState<Product[]>([]);
   const { mains } = useAuth()
   const [onBoardModal, setOnBoardModal] = useState(false)
+  const plugin = useRef(
+  Autoplay({ delay: 2000, stopOnInteraction: false })
+);
 
   // Quick access menu items
   const quickMenuItems = [
@@ -109,7 +113,7 @@ export default function Dashboard() {
         
         {/* Hero Carousel */}
         <Card className="overflow-hidden border-none shadow-lg">
-          <Carousel className="w-full">
+          <Carousel plugins={[plugin.current]} className="w-full">
             <CarouselContent>
               {mains?.products.map((pkg) => (
                 <CarouselItem key={pkg.ID}>
