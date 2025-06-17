@@ -26,14 +26,6 @@ export default function Packages() {
   const handleInvest = (packageId: string) => {
     const pkg = mains.products.find(p => p.ID === packageId);
     if (pkg) {
-      if (userBalance < pkg.min) {
-        toast({
-          title: "Insufficient balance",
-          description: `You need at least Kes ${useFormat(pkg.min)} to invest in this package.`,
-          variant: "destructive",
-        });
-        return;
-      }
       setSelectedPackage(pkg);
       setIsInvestFormOpen(true);
     }
