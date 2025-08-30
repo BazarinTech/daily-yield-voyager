@@ -35,6 +35,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import Autoplay from "embla-carousel-autoplay"
+import TradingViewChart from "@/components/TradingViewChart";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -171,6 +172,10 @@ export default function Dashboard() {
               </Link>
             ))}
           </div>
+        </div>
+        {/* Trading View Chart */}
+        <div style={{ width: "100%", height: "100vh" }}>
+          <TradingViewChart />
         </div>
         
         {/* Featured News/Articles */}
