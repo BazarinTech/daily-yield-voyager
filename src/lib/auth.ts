@@ -12,11 +12,11 @@ export async function login({email, password} : Login): Promise<AuthResponse> {
     return await response.json()
 }
 
-export async function register({email, password, confirmPassword, phone, upline} : Register): Promise<AuthResponse> {
+export async function register({email, password, confirmPassword, phone, upline, name, username} : Register): Promise<AuthResponse> {
     const response = await fetch(`${apiURL}/mains/auth.php`, {
         method: 'post',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({email, password, type: 'register', confirmPassword, phone, upline})
+        body: JSON.stringify({email, password, type: 'register', confirmPassword, phone, upline, name, username})
     })
 
     if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);

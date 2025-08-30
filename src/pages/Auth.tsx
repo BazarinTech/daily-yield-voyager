@@ -28,6 +28,8 @@ const loginSchema = z.object({
 const registerSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
   phone: z.string().min(10, { message: "Phone number must be at least 10 digits" }),
+  username: z.string().min(5, { message: "Username must be at least 5 characters" }),
+  name: z.string().min(5, { message: "Name must be at least 5 characters" }),
   password: z.string().min(6, { message: "Password must be at least 6 characters" }),
   confirmPassword: z.string(),
 }).refine((data) => data.password === data.confirmPassword, {
@@ -71,6 +73,8 @@ export default function Auth() {
       phone: "",
       password: "",
       confirmPassword: "",
+      name: "",
+      username: ""
     },
   });
 
@@ -104,10 +108,10 @@ export default function Auth() {
   const onRegisterSubmit = async(values: RegisterFormValues) => {
     setIsLoading(true)
     try {
-      const results = await register({email: values.email, password: values.password, confirmPassword: values.confirmPassword, phone: values.phone, upline, type: 'register'});
+      const results = await register({email: values.email, password: values.password, confirmPassword: values.confirmPassword, phone: values.phone, upline, type: 'register', name: values.name, username: values.username});
       setIsLoading(false)
       if (results.status == 'Success') {
-          // Simulate register success
+          // Simulate register successs
           toast({
             title: "Registration successful!",
             description: "Please login with your new account.",
@@ -155,9 +159,9 @@ export default function Auth() {
                     name="email"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Email</FormLabel>
+                        <FormLabel>Email or Phone</FormLabel>
                         <FormControl>
-                          <Input placeholder="your@email.com" {...field} />
+                          <Input placeholder="your@email.com or 07124..." {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -207,6 +211,21 @@ export default function Auth() {
             <TabsContent value="register">
               <Form {...registerForm}>
                 <form onSubmit={registerForm.handleSubmit(onRegisterSubmit)} className="space-y-4">
+
+                  <FormField
+                    control={registerForm.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Full Name</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Your Name" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
                   <FormField
                     control={registerForm.control}
                     name="email"
@@ -215,6 +234,20 @@ export default function Auth() {
                         <FormLabel>Email</FormLabel>
                         <FormControl>
                           <Input placeholder="your@email.com" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={registerForm.control}
+                    name="username"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Username</FormLabel>
+                        <FormControl>
+                          <Input placeholder="yourusername" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>

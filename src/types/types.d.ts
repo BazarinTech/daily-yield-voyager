@@ -16,7 +16,9 @@ type Register = {
     password: string,
     confirmPassword: string,
     type: string,
-    upline: string
+    upline: string,
+    name:string,
+    username:string
 }
 
 type Login = {
