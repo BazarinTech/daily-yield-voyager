@@ -21,31 +21,45 @@ import {
   HelpCircle,
   Calendar,
   Star,
-  MessageCircle
+  MessageCircle,
+  ArrowUp,
+  Wallet,
+  ArrowDown,
+  Plus
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import {
   Dialog,
-  DialogTrigger,
   DialogContent,
   DialogHeader,
   DialogFooter,
   DialogTitle,
   DialogDescription,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import Autoplay from "embla-carousel-autoplay"
 import TradingViewChart from "@/components/TradingViewChart";
+import { useToast } from "@/hooks/use-toast";
+import { deposit, withdraw } from "@/lib/actions";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import useFormat from "@/hooks/useFormat";
 
 export default function Dashboard() {
   const navigate = useNavigate();
   const [stats, setStats] = useState(() => getInvestmentStats());
   const [activeInvestments, setActiveInvestments] = useState<Product[]>([]);
-  const { mains } = useAuth()
+  const { mains, userID,mainFetcher  } = useAuth()
   const [onBoardModal, setOnBoardModal] = useState(false)
   const plugin = useRef(
   Autoplay({ delay: 2000, stopOnInteraction: false })
 );
+  const [depositAmount, setDepositAmount] = useState<string>("");
+  const [depositAccount, setDepositAccount] = useState('')
+  const [withdrawAmount, setWithdrawAmount] = useState<string>("");
+  const [isLoading, setLoading] = useState(false)
+  const { toast } = useToast();
 
   // Quick access menu items
   const quickMenuItems = [
@@ -94,15 +108,193 @@ export default function Dashboard() {
       localStorage.setItem('isCom', 'true')
     }
   }, [])
+
+  const handleDeposit = async() => {
+      if (!depositAmount || isNaN(Number(depositAmount)) || Number(depositAmount) <= 0) {
+        toast({
+          title: "Invalid amount!",
+          description: "Please enter a valid amount greater than 0",
+          variant: "destructive"
+        });
+        return;
+      }
+  
+      if (!depositAccount || isNaN(Number(depositAccount)) || Number(depositAccount) <= 0) {
+        toast({
+          title: "Invalid Phone number!",
+          description: "Please enter a valid mpesa phone number",
+          variant: "destructive"
+        });
+        return;
+      }
+      setLoading(true)
+      try {
+        const results = await deposit({userID, amount: depositAmount, account: depositAccount})
+        if (results.status == "Success") {
+            toast({
+              title: "Stk Successfull!",
+              description: results.message,
+            });
+        }else{
+          toast({
+              title: "Stk Failed!",
+              description: results.message,
+              variant: "destructive"
+            });
+        }
+        mainFetcher(userID)
+      } catch (error) {
+        console.error("Deposit Error:", error)
+      }
+      
+      setDepositAmount("");
+      setDepositAccount("")
+      setLoading(false)
+    };
+  
+    const handleWithdraw = async() => {
+  
+      if (!withdrawAmount || isNaN(Number(withdrawAmount)) || Number(withdrawAmount) <= 0) {
+        toast({
+          title: "Invalid amount!",
+          description: "Please enter a valid amount greater than 0",
+          variant: "destructive"
+        });
+        return;
+      }
+  
+      if (Number(withdrawAmount) > mains.wallet.balance) {
+        toast({
+          title: "Insufficient funds!",
+          description: "You don't have enough balance for this withdrawal",
+          variant: "destructive"
+        });
+        return;
+      }
+      
+      setLoading(true)
+       try {
+        const results = await withdraw({userID, amount: withdrawAmount, account: mains.user.phone})
+        if (results.status == "Success") {
+            toast({
+              title: "Transaction Successfull!",
+              description: results.message,
+            });
+        }else{
+          toast({
+              title: "Transaction Failed!",
+              description: results.message,
+              variant: "destructive"
+            });
+        }
+        mainFetcher(userID)
+      } catch (error) {
+        console.error("Deposit Error:", error)
+      }
+      
+      setWithdrawAmount("");
+      setLoading(false)
+    };
   
   return (
     <Layout>
       <div className="space-y-8">
         <div className="flex justify-between items-center">
-          <div>
+          {/* <div>
             <h1 className="text-3xl font-bold">Let AI work for you!</h1>
             <p className="text-muted-foreground">Discover new AI legitimate trading methods</p>
-          </div>
+          </div> */}
+          <Dialog>
+              <DialogTrigger asChild>
+                <Button className="bg-gradient-to-r from-finance-green to-finance-green hover:opacity-90">
+                  <Plus className="mr-2 h-4 w-4" /> Deposit
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Deposit Funds</DialogTitle>
+                  <DialogDescription>
+                    Add funds to your investment account.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                  <div className="grid gap-2">
+                    <Label htmlFor="deposit-amount">Amount(kes)</Label>
+                    <div className="relative">
+                      <Input
+                        id="deposit-amount"
+                        placeholder="Enter amount"
+                        className=""
+                        type="number" 
+                        value={depositAmount}
+                        onChange={(e) => setDepositAmount(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="payment-method">Payment Phone(Mpesa)</Label>
+                    <div className="flex items-center h-10 border rounded-md border-input bg-background">
+                      <Input
+                        id="deposit-amount"
+                        placeholder="Enter mpesa phone"
+                        className=""
+                        type="tel" 
+                        value={depositAccount}
+                        onChange={(e) => setDepositAccount(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button onClick={handleDeposit} disabled={isLoading}>
+                    <ArrowDown className="mr-2 h-4 w-4" /> {isLoading ? 'Initiating...' : 'Deposit Funds'} 
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant="outline" className="bg-red-700 text-white">
+                  <ArrowUp className="mr-2 h-4 w-4" /> Withdraw
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Withdraw Funds  (Fee 8%)</DialogTitle>
+                  <DialogDescription>
+                    Withdraw funds instantly. Ensure to have correct details beacuse all transactions are irreversible
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                  <div className="grid gap-2">
+                    <Label htmlFor="withdraw-amount">Amount</Label>
+                    <div className="relative">
+                      <Input
+                        id="withdraw-amount"
+                        placeholder="Enter amount"
+                        type="number"
+                        value={withdrawAmount}
+                        onChange={(e) => setWithdrawAmount(e.target.value)}
+                      />
+                    </div>
+                    <p className="text-sm text-muted-foreground">Available: Kes {useFormat(mains ? mains.wallet.balance : 0)}</p>
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="bank-account">Mpesa Account (To change, head to your profile)</Label>
+                    <div className="flex items-center h-10 px-3 border rounded-md border-input bg-background">
+                      <Wallet className="mr-2 h-4 w-4 text-muted-foreground" />
+                      <span>{mains?.user.phone}</span>
+                    </div>
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button onClick={handleWithdraw} disabled={isLoading}>
+                    <ArrowUp className="mr-2 h-4 w-4" /> {isLoading ? 'Initiating...' : 'Withdraw Funds'} 
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           <Button 
             onClick={() => navigate('/packages')}
             className="bg-gradient-to-r from-finance-teal to-finance-blue hover:opacity-90"
