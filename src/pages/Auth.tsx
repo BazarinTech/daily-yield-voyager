@@ -19,6 +19,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "@/hooks/use-toast";
 import { login, register } from "@/lib/auth";
 import { useAuth } from "@/contexts/AuthContext";
+import CryptoMarquee from "@/components/CryptoMacquee";
 
 const loginSchema = z.object({
   email: z.string(),
@@ -343,6 +344,7 @@ export default function Auth() {
           </Tabs>
         </div>
       </div>
+      <CryptoMarquee />
     </div>
   );
 }
