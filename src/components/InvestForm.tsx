@@ -55,7 +55,7 @@ export default function InvestForm({
   const form = useForm<z.infer<typeof investmentSchema>>({
     resolver: zodResolver(investmentSchema),
     defaultValues: {
-      amount: packageData?.min || 1000,
+      amount: packageData?.min || 0,
     },
   });
 
@@ -137,9 +137,9 @@ export default function InvestForm({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Invest in {packageData.name}</DialogTitle>
+          <DialogTitle>Trade with {packageData.name}</DialogTitle>
           <DialogDescription>
-            Enter your investment amount below.
+            Enter your trading amount below.
           </DialogDescription>
         </DialogHeader>
         
@@ -220,7 +220,7 @@ export default function InvestForm({
                 disabled={loading}
                 className="bg-gradient-to-r from-finance-teal to-finance-blue hover:opacity-90"
               >
-                {loading ? "Processing..." : "Invest Now"}
+                {loading ? "Processing..." : "Start Trade"}
               </Button>
             </DialogFooter>
           </form>

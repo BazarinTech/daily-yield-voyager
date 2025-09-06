@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "@/components/Layout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
   Carousel,
@@ -262,7 +262,7 @@ export default function Dashboard() {
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Withdraw Funds  (Fee 8%)</DialogTitle>
+                  <DialogTitle>Withdraw Funds</DialogTitle>
                   <DialogDescription>
                     Withdraw funds instantly. Ensure to have correct details beacuse all transactions are irreversible
                   </DialogDescription>
@@ -303,6 +303,23 @@ export default function Dashboard() {
             Start Now
           </Button>
         </div>
+
+        {/*Balance card */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Account Balance</CardTitle>
+            <CardDescription>Your current tradable funds</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Available Balance</p>
+                <p className="text-3xl font-bold">kes {useFormat(mains ? mains.wallet.balance : 0)}</p>
+              </div>
+              
+            </div>
+          </CardContent>
+        </Card>
         
         {/* Hero Carousel */}
         <Card className="overflow-hidden border-none shadow-lg">
