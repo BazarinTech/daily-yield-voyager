@@ -10,27 +10,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const notifications = [
-  {
-    id: 1,
-    title: "New Return Added",
-    message: "Your Elite Trader investment earned 3.2% today!",
-    time: "2 hours ago",
-    read: false,
-  },
-  {
-    id: 2,
-    title: "Investment Completed",
-    message: "Your Forex Starter investment has completed with total returns of $75.25",
-    time: "Yesterday",
-    read: false,
-  },
-  {
-    id: 3,
-    title: "New Package Available",
-    message: "Check out our new Premium Forex package with higher returns!",
-    time: "3 days ago",
-    read: true,
-  },
+
 ];
 
 export default function NotificationsModal() {
