@@ -111,14 +111,14 @@ export default function Profile() {
         {/* Stats Cards - Moved from Dashboard */}
         <div className="grid gap-4 grid-cols-2 md:grid-cols-4">
           <StatCard
-            title="Investments Income"
+            title="Trade Income"
             value={`Kes ${useFormat(mains ? mains.wallet.income : 0)}`}
             description="Across all packages"
             icon={<DollarSign className="h-4 w-4" />}
             trend={2.5}
           />
           <StatCard
-            title="Active Investments"
+            title="Active Trades"
             value={mains ? mains.active_investment : '0'}
             description="Currently running"
             icon={<LineChart className="h-4 w-4" />}
