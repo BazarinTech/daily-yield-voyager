@@ -99,15 +99,15 @@ export default function Dashboard() {
 
   }, [mains]);
 
-  useEffect(() => {
-    const isCom = localStorage.getItem('isCom');
-    if (isCom) {
-      setOnBoardModal(false)
-    }else{
-      setOnBoardModal(true)
-      localStorage.setItem('isCom', 'true')
-    }
-  }, [])
+  // useEffect(() => {
+  //   const isCom = localStorage.getItem('isCom');
+  //   if (isCom) {
+  //     setOnBoardModal(false)
+  //   }else{
+  //     setOnBoardModal(true)
+  //     localStorage.setItem('isCom', 'true')
+  //   }
+  // }, [])
 
   const handleDeposit = async() => {
       if (!depositAmount || isNaN(Number(depositAmount)) || Number(depositAmount) <= 0) {
