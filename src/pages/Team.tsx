@@ -44,7 +44,7 @@ export default function Team() {
         <Card>
           <CardHeader>
             <CardTitle>Your Referral Link</CardTitle>
-            <CardDescription>Share this link with your friends and earn 5% commission</CardDescription>
+            <CardDescription>Share this link with your friends and earn 10% commission for their first trade</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex items-center gap-2">
