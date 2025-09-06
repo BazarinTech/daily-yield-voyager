@@ -12,7 +12,7 @@ export default function TradingViewChart() {
       script.async = true;
       script.innerHTML = JSON.stringify({
         autosize: true,
-        symbol: "NASDAQ:AAPL",   // <-- Change this to any ticker e.g. BTCUSDT, EURUSD
+        symbol: "BINANCE:BTCUSDT",   // <-- Change this to any ticker e.g. BTCUSDT, EURUSD
         interval: "D",
         timezone: "Etc/UTC",
         theme: "light",
