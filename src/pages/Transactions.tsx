@@ -190,7 +190,7 @@ export default function Transactions() {
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Withdraw Funds  (Fee 8%)</DialogTitle>
+                  <DialogTitle>Withdraw Funds</DialogTitle>
                   <DialogDescription>
                     Withdraw funds instantly. Ensure to have correct details beacuse all transactions are irreversible
                   </DialogDescription>
