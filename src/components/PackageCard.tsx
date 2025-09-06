@@ -44,7 +44,7 @@ export default function PackageCard({ pkg, onInvest, className }: PackageCardPro
             </CardDescription>
           </div>
           <Badge className={getBadgeColor(pkg.riskLevel)}>
-            Risk Level {pkg.riskLevel}
+            Level {pkg.riskLevel}
           </Badge>
         </div>
       </CardHeader>
@@ -76,7 +76,7 @@ export default function PackageCard({ pkg, onInvest, className }: PackageCardPro
           onClick={() => onInvest(pkg.ID)}
           className="w-full bg-gradient-to-r from-finance-teal to-finance-blue hover:opacity-90"
         >
-          Invest Now
+          Trade Now
         </Button>
       </CardFooter>
     </Card>

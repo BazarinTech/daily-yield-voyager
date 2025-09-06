@@ -25,7 +25,8 @@ import {
   ArrowUp,
   Wallet,
   ArrowDown,
-  Plus
+  Plus,
+  PlaneTakeoff
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -63,7 +64,7 @@ export default function Dashboard() {
 
   // Quick access menu items
   const quickMenuItems = [
-    { name: "Group", icon: MessageCircle, path: "https://chat.whatsapp.com/BV85A7KjFKP4hGHDcvTyg6", color: "bg-finance-teal text-white" },
+    { name: "Trade Now", icon: PlaneTakeoff, path: "/packages", color: "bg-finance-teal text-white" },
     { name: "Team", icon: Users, path: "/team", color: "bg-finance-blue text-white" },
     { name: "History", icon: BarChart3, path: "/history", color: "bg-finance-accent text-finance-blue" },
     { name: "Support", icon: HelpCircle, path: "https://wa.me/254765472722?text=Hi%20I%20need%20help", color: "bg-muted text-foreground" }
