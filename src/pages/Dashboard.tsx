@@ -46,6 +46,7 @@ import { deposit, withdraw } from "@/lib/actions";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import useFormat from "@/hooks/useFormat";
+import CryptoMarquee from "@/components/CryptoMacquee";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -199,7 +200,8 @@ export default function Dashboard() {
   
   return (
     <Layout>
-      <div className="space-y-8">
+      <CryptoMarquee />
+      <div className="space-y-8 mt-3">
         <div className="flex justify-between items-center">
           {/* <div>
             <h1 className="text-3xl font-bold">Let AI work for you!</h1>
