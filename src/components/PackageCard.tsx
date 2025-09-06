@@ -59,7 +59,7 @@ export default function PackageCard({ pkg, onInvest, className }: PackageCardPro
             <p className="text-lg font-semibold">Kes {useFormat(pkg.max)}</p>
           </div>
           <div>
-            <p className="text-sm text-muted-foreground">Daily Return</p>
+            <p className="text-sm text-muted-foreground">Return</p>
             <p className="text-lg font-semibold">
               {pkg.returns}% 
             </p>
