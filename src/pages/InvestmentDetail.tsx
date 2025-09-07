@@ -13,6 +13,7 @@ import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { useAuth } from "@/contexts/AuthContext";
 import useFormat from "@/hooks/useFormat";
+import useDaysAndHours from "@/hooks/use-duration";
 
 export default function InvestmentDetail() {
   const { id } = useParams<{ id: string }>();
@@ -58,7 +59,7 @@ export default function InvestmentDetail() {
           <h1 className="text-3xl font-bold">Investment Not Found</h1>
           <p className="text-muted-foreground">The investment you're looking for doesn't exist.</p>
           <Button onClick={() => navigate('/investments')}>
-            Back to Investments
+            Back to trades
           </Button>
         </div>
       </Layout>
@@ -117,7 +118,7 @@ export default function InvestmentDetail() {
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Duration</p>
-                  <p className="text-lg font-semibold">{investment.duration} days</p>
+                  <p className="text-lg font-semibold">{useDaysAndHours(investment.duration)}</p>
                 </div>
               </div>
               

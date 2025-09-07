@@ -47,6 +47,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import useFormat from "@/hooks/useFormat";
 import CryptoMarquee from "@/components/CryptoMacquee";
+import useDaysAndHours from "@/hooks/use-duration";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -348,7 +349,7 @@ export default function Dashboard() {
                         </div>
                         <div className="flex items-center">
                           <Calendar className="h-4 w-4 text-finance-accent mr-2" />
-                          <span className="text-sm">{pkg.duration} Days Duration</span>
+                          <span className="text-sm">{useDaysAndHours(pkg.duration)} Duration</span>
                         </div>
                       </div>
                       

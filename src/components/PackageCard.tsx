@@ -12,6 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { Package } from "@/types";
 import { cn } from "@/lib/utils";
 import useFormat from "@/hooks/useFormat";
+import useDaysAndHours from "@/hooks/use-duration";
 
 interface PackageCardProps {
   pkg: Product;
@@ -66,7 +67,7 @@ export default function PackageCard({ pkg, onInvest, className }: PackageCardPro
           </div>
           <div>
             <p className="text-sm text-muted-foreground">Duration</p>
-            <p className="text-lg font-semibold">{pkg.duration} days</p>
+            <p className="text-lg font-semibold">{useDaysAndHours(pkg.duration)}</p>
           </div>
         </div>
         <p className="text-sm text-muted-foreground">{pkg.description}</p>
