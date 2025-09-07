@@ -311,7 +311,7 @@ export default function Dashboard() {
         <Card>
           <CardHeader>
             <CardTitle>Account Balance</CardTitle>
-            <CardDescription>Your current tradable funds</CardDescription>
+            <CardDescription>Your current tradable and withdrawable funds</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-between">
