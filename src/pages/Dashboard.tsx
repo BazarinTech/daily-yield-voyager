@@ -48,6 +48,7 @@ import { Input } from "@/components/ui/input";
 import useFormat from "@/hooks/useFormat";
 import CryptoMarquee from "@/components/CryptoMacquee";
 import useDaysAndHours from "@/hooks/use-duration";
+import SupportBox from "@/components/SupportBox";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -418,6 +419,7 @@ export default function Dashboard() {
             ))}
           </div>
         </div>
+        <SupportBox />
       </div>
 
       <Dialog onOpenChange={setOnBoardModal} open={onBoardModal}>
