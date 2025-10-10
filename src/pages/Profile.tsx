@@ -300,6 +300,7 @@ export default function Profile() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
+        
     </Layout>
   );
 }
