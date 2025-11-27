@@ -36,7 +36,7 @@ export default function Layout({ children, className }: LayoutProps) {
           {/* Logo */}
           <div className="p-4 flex items-center justify-center md:justify-start">
             <h1 className="text-xl font-bold text-sidebar-foreground">
-              <span className="text-primary">Trade</span>Vault
+              <span className="text-primary">Trade</span>Swing
             </h1>
           </div>
           
@@ -89,7 +89,7 @@ export default function Layout({ children, className }: LayoutProps) {
         {/* Mobile header */}
         <div className="md:hidden flex justify-between items-center p-4 border-b border-border bg-background sticky top-0 z-10">
           <h1 className="text-lg font-bold">
-            <span className="text-primary">Trade</span>Vault
+            <span className="text-primary">Trade</span>Swing
           </h1>
           <div className="flex items-center gap-2">
             <NotificationsModal />
