@@ -12,7 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 export default function Team() {
   const { mains, userID } = useAuth()
   const [copied, setCopied] = useState(false);
-  const link = `https://www.trade-vault.live/auth?upline=${userID}`;
+  const link = `https://www.trade-swing.tech/auth?upline=${userID}`;
   const { toast } = useToast()
   const handleCopy = async () => {
     try {
@@ -50,7 +50,7 @@ export default function Team() {
             <div className="flex items-center gap-2">
               <Input
                 readOnly
-                value={`https://www.trade-vault.live/auth?upline=${userID}`}
+                value={`https://www.trade-swing.tech/auth?upline=${userID}`}
                 className="font-mono text-sm"
               />
               <Button variant="outline" size="icon" onClick={handleCopy}>
