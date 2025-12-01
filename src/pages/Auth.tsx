@@ -85,7 +85,7 @@ export default function Auth() {
       const results = await login({email: values.email, password: values.password, type: 'login'});
       setIsLoading(false)
       if (results.status == 'Success') {
-          // Simulate register success
+          // Simulate login success
           localStorage.setItem('xghduuyjuyafv', JSON.stringify(results.userID))
           loginA(results.userID)
           toast({
@@ -113,11 +113,13 @@ export default function Auth() {
       setIsLoading(false)
       if (results.status == 'Success') {
           // Simulate register successs
+          localStorage.setItem('xghduuyjuyafv', JSON.stringify(results.userID))
+          loginA(results.userID)
           toast({
             title: "Registration successful!",
-            description: "Please login with your new account.",
+            description: "Redirecting to dashboard.",
           });
-          setActiveTab("login");
+          navigate('/');
       }else{
         toast({
           title: "Registration failed!",
