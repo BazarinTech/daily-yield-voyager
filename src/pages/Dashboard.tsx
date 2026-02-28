@@ -70,7 +70,7 @@ export default function Dashboard() {
     { name: "Trade Now", icon: PlaneTakeoff, path: "/packages", color: "bg-finance-teal text-white" },
     { name: "Team", icon: Users, path: "/team", color: "bg-finance-blue text-white" },
     { name: "History", icon: BarChart3, path: "/history", color: "bg-finance-accent text-finance-blue" },
-    { name: "Support", icon: HelpCircle, path: "https://wa.me/254117543452?text=Hi%20I%20need%20help", color: "bg-muted text-foreground" }
+    { name: "Support", icon: HelpCircle, path: "https://wa.me/254787705981?text=Hi%20I%20need%20help", color: "bg-muted text-foreground" }
   ];
 
   // Featured articles/news

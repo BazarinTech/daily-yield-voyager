@@ -12,7 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 export default function Team() {
   const { mains, userID } = useAuth()
   const [copied, setCopied] = useState(false);
-  const link = `https://app.trade-swing.tech/auth?upline=${userID}`;
+  const link = `https://prefexai.club/auth?upline=${userID}`;
   const { toast } = useToast()
   const handleCopy = async () => {
     try {

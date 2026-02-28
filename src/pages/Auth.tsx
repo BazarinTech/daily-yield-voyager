@@ -138,7 +138,7 @@ export default function Auth() {
       <div className="w-full max-w-md space-y-6 mb-2">
         <div className="text-center">
           <h1 className="text-2xl font-bold">
-           Welcome to <span className="text-primary">Trade</span>Swing
+           Welcome to <span className="text-primary">Prefex</span>Ai
           </h1>
           <p className="text-muted-foreground mt-2">
             {activeTab === "login" 
